@@ -1,12 +1,10 @@
 package mb.cx.mnavi.activity;
 
 import android.content.pm.PackageManager;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -15,6 +13,7 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 
 import mb.cx.mnavi.R;
+import trikita.log.Log;
 
 /**
  * メインアクティビティ
@@ -76,24 +75,24 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
             @Override
             public void didEnterRegion(Region region) {
-                Log.i(TAG, "I just saw an beacon for the first time!");
+                Log.i("I just saw an beacon for the first time!");
             }
 
             @Override
             public void didExitRegion(Region region) {
-                Log.i(TAG, "I no longer see an beacon");
+                Log.i("I no longer see an beacon");
             }
 
             @Override
             public void didDetermineStateForRegion(int state, Region region) {
-                Log.i(TAG, "I have just switched from seeing/not seeing beacons: " + state);
+                Log.i("I have just switched from seeing/not seeing beacons: " + state);
             }
         });
 
         try {
             beaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
         } catch (RemoteException e) {
-            Log.i(TAG, e.toString());
+            Log.i(e);
         }
     }
 }
