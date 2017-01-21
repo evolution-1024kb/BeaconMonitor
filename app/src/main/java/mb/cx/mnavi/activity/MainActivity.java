@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import butterknife.BindView;
 import mb.cx.mnavi.R;
 import trikita.log.Log;
 
@@ -44,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
      * Beacon Manager
      */
     private BeaconManager beaconManager;
+
+    /**
+     * HellowWorld
+     */
+    @BindView(R.id.helloworld)
+    private TextView helloWorld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
