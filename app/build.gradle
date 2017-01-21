@@ -1,8 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+
+repositories {
+    maven {
+        url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
+    }
+}
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "mb.cx.mnavi"
         minSdkVersion 23
@@ -28,4 +35,7 @@ dependencies {
     compile 'co.trikita:log:1.1.5'
     compile 'org.altbeacon:android-beacon-library:2.9.2'
     testCompile 'junit:junit:4.12'
+    compile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.uphyca:stetho_realm:2.0.0'
+    compile 'io.realm:android-adapters:1.4.0'
 }
