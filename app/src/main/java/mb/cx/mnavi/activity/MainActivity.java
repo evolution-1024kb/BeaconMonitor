@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 initBeaconManager();
             }
         }
-
     }
 
     @Override
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         try {
             beaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
         } catch (RemoteException e) {
+            Log.i(TAG, e.toString());
         }
     }
 }
