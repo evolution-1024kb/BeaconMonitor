@@ -1,6 +1,7 @@
 package mb.cx.mnavi.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,10 +31,13 @@ import trikita.log.Log;
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     /**
-     * TAG
+     * 権限リクエスト
      */
-    private static final String TAG = "MainActivity";
-    private static final int PERMISSIONS = 100;
+    private static final int REQUEST_PERMISSIONS = 100;
+
+    /**
+     * Bluetooth有効化リクエスト
+     */
     private static final int REQUEST_ENABLE_BLUETOOTH = 200;
 
     /**
@@ -41,20 +45,42 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
      */
     private BeaconManager beaconManager;
 
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    private static final int PERMISSION_REQUEST_BLUETOOTH = 2;
-    private static final int PERMISSION_REQUEST_BLUETOOTH_ADMIN = 3;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Bluetooth自体のチェック
+        final boolean isBluetoothEnabled = isBluetoothEnabled();
+        if (isBluetoothEnabled) {
+            final boolean granted = isGrantedAllPermissions();
+            if (granted) {
+                initBeaconManager();
+            }
+        }
+    }
+
+    /**
+     * Bluetoothが使えるかどうか
+     * @return 有効ならTRUE
+     */
+    private boolean isBluetoothEnabled() {
+
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!bluetoothAdapter.isEnabled()) {
             Intent btOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(btOn, REQUEST_ENABLE_BLUETOOTH);
+            return false;
         }
+
+        return true;
+    }
+
+    /**
+     * 位置情報およびBluetoothが使用出来るか
+     * @return 全て使用可能ならTRUE
+     */
+    private boolean isGrantedAllPermissions() {
 
         final List<String> permissions = new ArrayList<>();
         if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -68,32 +94,24 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             permissions.add(Manifest.permission.BLUETOOTH_ADMIN);
         }
 
-        if (permissions.isEmpty()) {
-            initBeaconManager();
-        } else {
-            requestPermissions(permissions.toArray(new String[0]), PERMISSIONS);
+        if (!permissions.isEmpty()) {
+            requestPermissions(permissions.toArray(new String[0]), REQUEST_PERMISSIONS);
+            return false;
         }
-// //            requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-//        } else if (this.checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
-////            requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, PERMISSION_REQUEST_BLUETOOTH);
-//        } else if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
-////            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, PERMISSION_REQUEST_BLUETOOTH_ADMIN);
-//        } else {
-//            initBeaconManager();
-//        }
+
+        return true;
     }
 
-
-    private void checkBluetoothAdapter() {
-         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent btOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(btOn, REQUEST_ENABLE_BLUETOOTH);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
+            if (resultCode == Activity.RESULT_OK) {
+                final boolean isGranted = isGrantedAllPermissions();
+                if (isGranted) {
+                    initBeaconManager();
+                }
+            }
         }
-    }
-
-    private void checkPermissions() {
-
     }
 
     /**
@@ -111,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == PERMISSIONS) {
+        if (requestCode == REQUEST_PERMISSIONS) {
 
             boolean grantedAll = true;
             for (int result : grantResults) {
