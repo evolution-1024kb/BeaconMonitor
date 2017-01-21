@@ -1,16 +1,25 @@
 package mb.cx.mnavi.activity;
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import mb.cx.mnavi.R;
 import trikita.log.Log;
@@ -24,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
      * TAG
      */
     private static final String TAG = "MainActivity";
+    private static final int PERMISSIONS = 100;
+    private static final int REQUEST_ENABLE_BLUETOOTH = 200;
 
     /**
      * Beacon Manager
@@ -31,17 +42,58 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private BeaconManager beaconManager;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    private static final int PERMISSION_REQUEST_BLUETOOTH = 2;
+    private static final int PERMISSION_REQUEST_BLUETOOTH_ADMIN = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-        } else {
-            initBeaconManager();
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent btOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(btOn, REQUEST_ENABLE_BLUETOOTH);
         }
+
+        final List<String> permissions = new ArrayList<>();
+        if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+
+        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.BLUETOOTH);
+        }
+        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.BLUETOOTH_ADMIN);
+        }
+
+        if (permissions.isEmpty()) {
+            initBeaconManager();
+        } else {
+            requestPermissions(permissions.toArray(new String[0]), PERMISSIONS);
+        }
+// //            requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+//        } else if (this.checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+////            requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, PERMISSION_REQUEST_BLUETOOTH);
+//        } else if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+////            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_ADMIN}, PERMISSION_REQUEST_BLUETOOTH_ADMIN);
+//        } else {
+//            initBeaconManager();
+//        }
+    }
+
+
+    private void checkBluetoothAdapter() {
+         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent btOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(btOn, REQUEST_ENABLE_BLUETOOTH);
+        }
+    }
+
+    private void checkPermissions() {
+
     }
 
     /**
@@ -51,14 +103,25 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        beaconManager.setForegroundBetweenScanPeriod(2000);
+        beaconManager.setBackgroundBetweenScanPeriod(2000);
         beaconManager.bind(this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == PERMISSION_REQUEST_COARSE_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == PERMISSIONS) {
+
+            boolean grantedAll = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    grantedAll = false;
+                    break;
+                }
+            }
+
+            if (!grantedAll) {
                 initBeaconManager();
             }
         }
@@ -72,15 +135,29 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     @Override
     public void onBeaconServiceConnect() {
+
+        final Region region = new Region("startRangingBeaconsInRegion", null, null, null);
+
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
             @Override
             public void didEnterRegion(Region region) {
                 Log.i("I just saw an beacon for the first time!");
+
+                try {
+                    beaconManager.startRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    Log.e(e);
+                }
             }
 
             @Override
             public void didExitRegion(Region region) {
                 Log.i("I no longer see an beacon");
+                try {
+                    beaconManager.stopRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    Log.e(e);
+                }
             }
 
             @Override
@@ -88,9 +165,17 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 Log.i("I have just switched from seeing/not seeing beacons: " + state);
             }
         });
-
+        beaconManager.addRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
+                if (!collection.isEmpty()) {
+                    final Beacon beacon = collection.iterator().next();
+                    Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + "::" + beacon.getDistance());
+                }
+            }
+        });
         try {
-            beaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
+            beaconManager.startMonitoringBeaconsInRegion(region);
         } catch (RemoteException e) {
             Log.i(e);
         }
