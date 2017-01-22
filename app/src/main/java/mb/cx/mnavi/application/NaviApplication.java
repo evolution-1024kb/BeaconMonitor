@@ -8,6 +8,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import io.realm.Realm;
 import mb.cx.mnavi.BuildConfig;
+import mb.cx.mnavi.utility.RealmSetup;
 
 /**
  * アプリケーションクラス
@@ -25,6 +26,9 @@ public class NaviApplication extends Application {
         }
 
         Realm.init(this);
+
+        final RealmSetup realmSetup = new RealmSetup();
+        realmSetup.setup();
 
         if (BuildConfig.DEBUG) {
             Stetho.initialize(

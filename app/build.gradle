@@ -32,6 +32,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
+    compile "org.projectlombok:lombok:1.16.12"
     compile 'co.trikita:log:1.1.5'
     compile 'org.altbeacon:android-beacon-library:2.9.2'
     testCompile 'junit:junit:4.12'
@@ -43,4 +44,5 @@ dependencies {
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }

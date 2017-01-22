@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
      */
     private BeaconManager beaconManager;
 
-    /**
-     * HelloWorld
-     */
-    @BindView(R.id.helloworld)
-    TextView helloWorld;
+//    /**
+//     * HelloWorld
+//     */
+//    @BindView(R.id.helloworld)
+//    TextView helloWorld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
