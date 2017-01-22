@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<com.google.android.flexbox.FlexboxLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,6 +10,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    app:flexDirection="row"
+    app:flexWrap="nowrap"
     tools:context="mb.cx.mnavi.activity.MainActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#0000FF"
+        android:text="Hello World!1"/>
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#FFFF00"
+        android:text="Hello World!2"/>
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#FF0000"
+        android:text="Hello World!3"/>
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#FF9900"
+        android:text="Hello World!4"/>
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="#FF0099"
+        android:text="Hello World!5"/>
+</com.google.android.flexbox.FlexboxLayout>
