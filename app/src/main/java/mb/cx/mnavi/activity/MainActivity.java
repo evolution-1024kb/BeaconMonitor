@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private BeaconManager beaconManager;
 
     /**
-     * HellowWorld
+     * HelloWorld
      */
     @BindView(R.id.helloworld)
-    private TextView helloWorld;
+    TextView helloWorld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 }
             }
 
-            if (!grantedAll) {
+            if (grantedAll) {
                 initBeaconManager();
             }
         }
