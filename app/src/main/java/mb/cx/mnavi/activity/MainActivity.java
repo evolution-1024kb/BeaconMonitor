@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
@@ -24,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import mb.cx.mnavi.R;
 import trikita.log.Log;
 
@@ -47,16 +50,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
      */
     private BeaconManager beaconManager;
 
-//    /**
-//     * HelloWorld
-//     */
-//    @BindView(R.id.helloworld)
-//    TextView helloWorld;
+    /**
+     * 展示物一覧
+     */
+    @BindView(R.id.list_near_items)
+    ListView nearItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
 
         // Bluetooth自体のチェック
         final boolean isBluetoothEnabled = isBluetoothEnabled();
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     /**
      * Bluetoothが使えるかどうか
+     *
      * @return 有効ならTRUE
      */
     private boolean isBluetoothEnabled() {
@@ -86,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     /**
      * 位置情報およびBluetoothが使用出来るか
+     *
      * @return 全て使用可能ならTRUE
      */
     private boolean isGrantedAllPermissions() {
@@ -162,7 +169,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     @Override
     public void onBeaconServiceConnect() {
 
-        final Region region = new Region("startRangingBeaconsInRegion", null, null, null);
+        final String uuid = getString(R.string.beacon_proximity_uuid);
+        final Identifier identifier = Identifier.parse(uuid);
+        final Region region = new Region("startRangingBeaconsInRegion", identifier, null, null);
 
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
             @Override
@@ -196,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
                 if (!collection.isEmpty()) {
                     final Beacon beacon = collection.iterator().next();
-                    Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + "::" + beacon.getDistance());
+                    Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getDistance());
                 }
             }
         });

@@ -28,7 +28,7 @@ public class NaviApplication extends Application {
         Realm.init(this);
 
         final RealmSetup realmSetup = new RealmSetup();
-        realmSetup.setup();
+        realmSetup.setup(this);
 
         if (BuildConfig.DEBUG) {
             Stetho.initialize(
