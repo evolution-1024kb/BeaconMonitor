@@ -27,7 +27,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import mb.cx.mnavi.R;
+import mb.cx.mnavi.adapter.NearItemsAdapter;
+import mb.cx.mnavi.realm.Item;
 import trikita.log.Log;
 
 /**
@@ -56,12 +60,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     @BindView(R.id.list_near_items)
     ListView nearItems;
 
+    /**
+     * Realmインスタンス
+     */
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        realm = Realm.getDefaultInstance();
 
         // Bluetooth自体のチェック
         final boolean isBluetoothEnabled = isBluetoothEnabled();
@@ -71,6 +81,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 initBeaconManager();
             }
         }
+
+        final RealmResults<Item> items = realm.where(Item.class).findAll().sort("title");
+        final NearItemsAdapter adapter = new NearItemsAdapter(this, items);
+        nearItems.setAdapter(adapter);
     }
 
     /**
@@ -163,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        realm.close();
         beaconManager.unbind(this);
     }
 

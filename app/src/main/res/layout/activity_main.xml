@@ -23,7 +23,9 @@
 
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="match_parent" android:orientation="vertical"
-                  app:layout_flexBasisPercent="30%">
+                  app:layout_flexBasisPercent="30%"
+                  android:paddingStart="@dimen/activity_start_margin"
+                  android:paddingEnd="@dimen/activity_end_margin">
         <TextView
             android:text="@string/label_near_items"
             android:layout_width="match_parent"

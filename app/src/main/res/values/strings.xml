@@ -1,4 +1,7 @@
 <resources>
+
+    <string name="dummy">ダミーテキスト</string>
+
     <string name="app_name">ナビゲータ</string>
     <string name="label_near_items">近くの展示物</string>
 
