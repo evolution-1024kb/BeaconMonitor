@@ -10,7 +10,6 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             }
         }
 
-        final RealmResults<Item> items = realm.where(Item.class).findAll().sort("title");
+        final RealmResults<Item> items = realm.where(Item.class).equalTo("active", true).findAll().sort("title");
         final NearItemsAdapter adapter = new NearItemsAdapter(this, items);
         nearItems.setAdapter(adapter);
     }
@@ -205,6 +204,22 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 Log.i("I no longer see an beacon");
                 try {
                     beaconManager.stopRangingBeaconsInRegion(region);
+
+                    final Realm localRealm = Realm.getDefaultInstance();
+                    localRealm.beginTransaction();
+                    try {
+                        final String uuid = region.getId1().toString().toUpperCase();
+                        final RealmResults<Item> results = localRealm.where(Item.class).equalTo("uuid", uuid).findAll();
+                        for (Item activeItem : results) {
+                            activeItem.setActive(false);
+                        }
+
+                        localRealm.commitTransaction();
+                    } catch (Exception e) {
+                        Log.e(e);
+                        localRealm.cancelTransaction();
+                    }
+
                 } catch (RemoteException e) {
                     Log.e(e);
                 }
@@ -216,12 +231,41 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             }
         });
         beaconManager.addRangeNotifier(new RangeNotifier() {
+
             @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
-                if (!collection.isEmpty()) {
-                    final Beacon beacon = collection.iterator().next();
-                    Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getDistance());
+            public void didRangeBeaconsInRegion(final Collection<Beacon> collection, Region region) {
+                if (collection.isEmpty()) {
+                    return;
                 }
+
+                final Realm localRealm = Realm.getDefaultInstance();
+                try {
+                    localRealm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            final RealmResults<Item> items = realm.where(Item.class).findAll();
+                            for (Item item : items) {
+                                item.setActive(false);
+                            }
+
+                            for (Beacon col : collection) {
+                                final String uuid = col.getId1().toString().toUpperCase();
+                                final int major = col.getId2().toInt();
+                                final int minor = col.getId3().toInt();
+
+                                final RealmResults<Item> results = localRealm.where(Item.class).equalTo("uuid", uuid).equalTo("major", major).equalTo("minor", minor).findAll();
+                                for (Item activeItem : results) {
+                                    activeItem.setActive(true);
+                                }
+                            }
+                        }
+                    });
+                } finally {
+                    localRealm.close();
+                }
+
+                final Beacon beacon = collection.iterator().next();
+                Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getDistance());
             }
         });
         try {

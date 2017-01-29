@@ -46,4 +46,10 @@ public class Item extends RealmObject {
      * Minor
      */
     private int minor;
+
+    /**
+     * ビーコン検出中かどうか
+     */
+    @Required
+    private Boolean active;
 }

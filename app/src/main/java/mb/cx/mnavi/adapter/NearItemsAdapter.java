@@ -1,8 +1,10 @@
 package mb.cx.mnavi.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 import mb.cx.mnavi.R;
 import mb.cx.mnavi.realm.Item;
+import trikita.log.Log;
 
 /**
  * 展示物一覧用アダプタ
@@ -63,6 +66,12 @@ public class NearItemsAdapter extends RealmBaseAdapter<Item> implements ListAdap
         final Item item = adapterData.get(position);
         viewHolder.title.setText(item.getTitle());
         viewHolder.body.setText(item.getBody());
+
+        if (item.getActive()) {
+            viewHolder.body.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            viewHolder.body.setTextColor(viewHolder.title.getCurrentTextColor());
+        }
         return convertView;
 
 
