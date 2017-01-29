@@ -13,7 +13,6 @@ import android.widget.ListView;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.Region;
 
@@ -26,6 +25,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import mb.cx.mnavi.R;
 import mb.cx.mnavi.adapter.NearItemsAdapter;
+import mb.cx.mnavi.beacon.BeaconManagerBuilder;
 import mb.cx.mnavi.beacon.BeaconMonitorNotifier;
 import mb.cx.mnavi.beacon.BeaconRangeNotifier;
 import mb.cx.mnavi.realm.Item;
@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         if (isBluetoothEnabled) {
             final boolean granted = isGrantedAllPermissions();
             if (granted) {
-                initBeaconManager();
+                beaconManager = BeaconManagerBuilder.build(this);
+                beaconManager.bind(this);
             }
         }
 
@@ -135,22 +136,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             if (resultCode == Activity.RESULT_OK) {
                 final boolean isGranted = isGrantedAllPermissions();
                 if (isGranted) {
-                    initBeaconManager();
+                    beaconManager = BeaconManagerBuilder.build(this);
+                    beaconManager.bind(this);
                 }
             }
         }
-    }
-
-    /**
-     * ビーコンマネージャの初期化
-     */
-    private void initBeaconManager() {
-        beaconManager = BeaconManager.getInstanceForApplication(this);
-        beaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-        beaconManager.setForegroundBetweenScanPeriod(2000);
-        beaconManager.setBackgroundBetweenScanPeriod(2000);
-        beaconManager.bind(this);
     }
 
     @Override
@@ -167,7 +157,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             }
 
             if (grantedAll) {
-                initBeaconManager();
+                beaconManager = BeaconManagerBuilder.build(this);
+                beaconManager.bind(this);
             }
         }
     }
