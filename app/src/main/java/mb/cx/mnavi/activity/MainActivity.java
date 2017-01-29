@@ -11,17 +11,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
-import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Identifier;
-import org.altbeacon.beacon.MonitorNotifier;
-import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,6 +26,8 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import mb.cx.mnavi.R;
 import mb.cx.mnavi.adapter.NearItemsAdapter;
+import mb.cx.mnavi.beacon.BeaconMonitorNotifier;
+import mb.cx.mnavi.beacon.BeaconRangeNotifier;
 import mb.cx.mnavi.realm.Item;
 import trikita.log.Log;
 
@@ -81,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             }
         }
 
+        // ListView初期化
         final RealmResults<Item> items = realm.where(Item.class).equalTo("active", true).findAll().sort("title");
         final NearItemsAdapter adapter = new NearItemsAdapter(this, items);
         nearItems.setAdapter(adapter);
@@ -187,87 +186,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         final Identifier identifier = Identifier.parse(uuid);
         final Region region = new Region("startRangingBeaconsInRegion", identifier, null, null);
 
-        beaconManager.addMonitorNotifier(new MonitorNotifier() {
-            @Override
-            public void didEnterRegion(Region region) {
-                Log.i("I just saw an beacon for the first time!");
+        beaconManager.addMonitorNotifier(new BeaconMonitorNotifier(beaconManager));
+        beaconManager.addRangeNotifier(new BeaconRangeNotifier());
 
-                try {
-                    beaconManager.startRangingBeaconsInRegion(region);
-                } catch (RemoteException e) {
-                    Log.e(e);
-                }
-            }
-
-            @Override
-            public void didExitRegion(Region region) {
-                Log.i("I no longer see an beacon");
-                try {
-                    beaconManager.stopRangingBeaconsInRegion(region);
-
-                    final Realm localRealm = Realm.getDefaultInstance();
-                    localRealm.beginTransaction();
-                    try {
-                        final String uuid = region.getId1().toString().toUpperCase();
-                        final RealmResults<Item> results = localRealm.where(Item.class).equalTo("uuid", uuid).findAll();
-                        for (Item activeItem : results) {
-                            activeItem.setActive(false);
-                        }
-
-                        localRealm.commitTransaction();
-                    } catch (Exception e) {
-                        Log.e(e);
-                        localRealm.cancelTransaction();
-                    }
-
-                } catch (RemoteException e) {
-                    Log.e(e);
-                }
-            }
-
-            @Override
-            public void didDetermineStateForRegion(int state, Region region) {
-                Log.i("I have just switched from seeing/not seeing beacons: " + state);
-            }
-        });
-        beaconManager.addRangeNotifier(new RangeNotifier() {
-
-            @Override
-            public void didRangeBeaconsInRegion(final Collection<Beacon> collection, Region region) {
-                if (collection.isEmpty()) {
-                    return;
-                }
-
-                final Realm localRealm = Realm.getDefaultInstance();
-                try {
-                    localRealm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            final RealmResults<Item> items = realm.where(Item.class).findAll();
-                            for (Item item : items) {
-                                item.setActive(false);
-                            }
-
-                            for (Beacon col : collection) {
-                                final String uuid = col.getId1().toString().toUpperCase();
-                                final int major = col.getId2().toInt();
-                                final int minor = col.getId3().toInt();
-
-                                final RealmResults<Item> results = localRealm.where(Item.class).equalTo("uuid", uuid).equalTo("major", major).equalTo("minor", minor).findAll();
-                                for (Item activeItem : results) {
-                                    activeItem.setActive(true);
-                                }
-                            }
-                        }
-                    });
-                } finally {
-                    localRealm.close();
-                }
-
-                final Beacon beacon = collection.iterator().next();
-                Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getDistance());
-            }
-        });
         try {
             beaconManager.startMonitoringBeaconsInRegion(region);
         } catch (RemoteException e) {
