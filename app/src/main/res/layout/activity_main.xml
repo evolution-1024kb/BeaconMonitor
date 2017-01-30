@@ -14,23 +14,30 @@
     app:flexWrap="nowrap"
     tools:context="mb.cx.mnavi.activity.MainActivity">
 
-    <TextView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="#0000FF"
-        android:text="Hello World!1"
-        app:layout_flexBasisPercent="70%"/>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_flexBasisPercent="70%"
+        app:srcCompat="@mipmap/map"
+        android:contentDescription="@string/map"/>
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent" android:orientation="vertical"
-                  app:layout_flexBasisPercent="30%"
-                  android:paddingStart="@dimen/activity_start_margin"
-                  android:paddingEnd="@dimen/activity_end_margin">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/activity_end_margin"
+        android:paddingStart="@dimen/activity_start_margin"
+        app:layout_flexBasisPercent="30%">
+
+
         <TextView
-            android:text="@string/label_near_items"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/textView"
-            android:gravity="center"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/label_near_items"/>
+
         <ListView
             android:id="@+id/list_near_items"
             android:layout_width="match_parent"
