@@ -1,4 +1,4 @@
-package mb.cx.mnavi.beacon;
+package cx.mb.mnavi.beacon;
 
 import android.os.RemoteException;
 
@@ -8,7 +8,7 @@ import org.altbeacon.beacon.Region;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import mb.cx.mnavi.realm.Item;
+import cx.mb.mnavi.realm.Item;
 import trikita.log.Log;
 
 /**

@@ -1,4 +1,4 @@
-package mb.cx.mnavi;
+package cx.mb.mnavi;
 
 import org.junit.Test;
 

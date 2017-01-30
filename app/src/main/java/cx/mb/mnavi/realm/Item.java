@@ -1,4 +1,4 @@
-package mb.cx.mnavi.realm;
+package cx.mb.mnavi.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

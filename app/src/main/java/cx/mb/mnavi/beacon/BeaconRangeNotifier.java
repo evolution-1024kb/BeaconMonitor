@@ -1,4 +1,4 @@
-package mb.cx.mnavi.beacon;
+package cx.mb.mnavi.beacon;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.RangeNotifier;
@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import mb.cx.mnavi.realm.Item;
+import cx.mb.mnavi.realm.Item;
 import trikita.log.Log;
 
 /**

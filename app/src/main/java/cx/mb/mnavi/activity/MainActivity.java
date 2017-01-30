@@ -1,4 +1,4 @@
-package mb.cx.mnavi.activity;
+package cx.mb.mnavi.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -23,12 +23,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import mb.cx.mnavi.R;
-import mb.cx.mnavi.adapter.NearItemsAdapter;
-import mb.cx.mnavi.beacon.BeaconManagerBuilder;
-import mb.cx.mnavi.beacon.BeaconMonitorNotifier;
-import mb.cx.mnavi.beacon.BeaconRangeNotifier;
-import mb.cx.mnavi.realm.Item;
+import cx.mb.mnavi.R;
+import cx.mb.mnavi.adapter.NearItemsAdapter;
+import cx.mb.mnavi.beacon.BeaconManagerBuilder;
+import cx.mb.mnavi.beacon.BeaconMonitorNotifier;
+import cx.mb.mnavi.beacon.BeaconRangeNotifier;
+import cx.mb.mnavi.realm.Item;
 import trikita.log.Log;
 
 /**

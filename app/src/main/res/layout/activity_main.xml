@@ -12,7 +12,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:flexDirection="row"
     app:flexWrap="nowrap"
-    tools:context="mb.cx.mnavi.activity.MainActivity">
+    tools:context="cx.mb.mnavi.activity.MainActivity">
 
     <ImageView
         android:id="@+id/imageView"

@@ -1,4 +1,4 @@
-package mb.cx.mnavi;
+package cx.mb.mnavi;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("mb.cx.mnavi", appContext.getPackageName());
+        assertEquals("cx.mb.mnavi", appContext.getPackageName());
     }
 }

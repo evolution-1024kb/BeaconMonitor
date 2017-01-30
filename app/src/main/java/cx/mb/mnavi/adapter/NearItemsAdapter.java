@@ -1,4 +1,4 @@
-package mb.cx.mnavi.adapter;
+package cx.mb.mnavi.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
-import mb.cx.mnavi.R;
-import mb.cx.mnavi.realm.Item;
+import cx.mb.mnavi.R;
+import cx.mb.mnavi.realm.Item;
 
 /**
  * 展示物一覧用アダプタ

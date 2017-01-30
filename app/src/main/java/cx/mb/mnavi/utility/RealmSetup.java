@@ -1,11 +1,11 @@
-package mb.cx.mnavi.utility;
+package cx.mb.mnavi.utility;
 
 import android.content.Context;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import mb.cx.mnavi.R;
-import mb.cx.mnavi.realm.Item;
+import cx.mb.mnavi.R;
+import cx.mb.mnavi.realm.Item;
 
 /**
  * Realmの仮データ登録

@@ -1,4 +1,4 @@
-package mb.cx.mnavi.application;
+package cx.mb.mnavi.application;
 
 import android.app.Application;
 
@@ -7,8 +7,8 @@ import com.squareup.leakcanary.LeakCanary;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import io.realm.Realm;
-import mb.cx.mnavi.BuildConfig;
-import mb.cx.mnavi.utility.RealmSetup;
+import cx.mb.mnavi.BuildConfig;
+import cx.mb.mnavi.utility.RealmSetup;
 
 /**
  * アプリケーションクラス
