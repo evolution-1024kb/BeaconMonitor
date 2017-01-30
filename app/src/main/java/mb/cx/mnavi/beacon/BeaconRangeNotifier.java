@@ -15,7 +15,6 @@ import trikita.log.Log;
  * ビーコン情報通知クラス
  * Created by toshiaki on 2017/01/29.
  */
-
 public class BeaconRangeNotifier implements RangeNotifier {
 
     @Override
