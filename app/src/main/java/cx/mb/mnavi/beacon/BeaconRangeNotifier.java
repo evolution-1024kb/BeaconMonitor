@@ -5,10 +5,10 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
 import java.util.Collection;
+import java.util.Iterator;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
 import cx.mb.mnavi.realm.Item;
+import io.realm.Realm;
 import trikita.log.Log;
 
 /**
@@ -48,7 +48,8 @@ public class BeaconRangeNotifier implements RangeNotifier {
             });
         }
 
-        final Beacon beacon = collection.iterator().next();
-        Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getDistance());
+        for (final Beacon beacon : collection) {
+            Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getDistance());
+        }
     }
 }
