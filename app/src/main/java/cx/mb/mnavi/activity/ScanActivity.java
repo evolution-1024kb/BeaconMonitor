@@ -49,8 +49,6 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
      * @return インテント
      */
     public static Intent createIntent(Context context, String uuid) {
-        assert uuid != null;
-        assert !uuid.equals("");
 
         final Intent intent = new Intent(context, ScanActivity.class);
         intent.putExtra("UUID", uuid);
@@ -89,7 +87,7 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
     @Override
     public void onBeaconServiceConnect() {
 
-        final Identifier identifier = Identifier.parse(uuid);
+        final Identifier identifier = (uuid == null || uuid.equals("")) ? null : Identifier.parse(uuid);
         final Region region = new Region("startRangingBeaconsInRegion", identifier, null, null);
 
         beaconManager.addMonitorNotifier(new BeaconMonitorNotifier(beaconManager));

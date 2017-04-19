@@ -70,11 +70,6 @@ public class MainActivity extends AppCompatActivity {
     void onClickButton(Button btn) {
 
         final String uuid = editUuid.getText().toString();
-        if (uuid.equals("")) {
-            Toast.makeText(this, "NO UUID", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         final Intent intent = ScanActivity.createIntent(this, uuid);
         startActivityForResult(intent, GO_SCAN);
     }
