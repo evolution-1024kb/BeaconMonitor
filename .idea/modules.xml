@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mnavi.iml" filepath="$PROJECT_DIR$/mnavi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beaconmonitor.iml" filepath="$PROJECT_DIR$/beaconmonitor.iml" />
     </modules>
   </component>
 </project>

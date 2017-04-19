@@ -6,9 +6,8 @@ import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
-import io.realm.Realm;
 import cx.mb.mnavi.BuildConfig;
-import cx.mb.mnavi.utility.RealmSetup;
+import io.realm.Realm;
 
 /**
  * アプリケーションクラス
@@ -26,9 +25,6 @@ public class NaviApplication extends Application {
         }
 
         Realm.init(this);
-
-        final RealmSetup realmSetup = new RealmSetup();
-        realmSetup.setup(this);
 
         if (BuildConfig.DEBUG) {
             Stetho.initialize(

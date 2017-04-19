@@ -27,20 +27,22 @@ public class BeaconRangeNotifier implements RangeNotifier {
             localRealm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    final RealmResults<Item> items = realm.where(Item.class).findAll();
-                    for (Item item : items) {
-                        item.setActive(false);
-                    }
+                    realm.delete(Item.class);
 
+                    int i = 0;
                     for (Beacon col : collection) {
                         final String uuid = col.getId1().toString().toUpperCase();
                         final int major = col.getId2().toInt();
                         final int minor = col.getId3().toInt();
 
-                        final RealmResults<Item> results = localRealm.where(Item.class).equalTo("uuid", uuid).equalTo("major", major).equalTo("minor", minor).findAll();
-                        for (Item activeItem : results) {
-                            activeItem.setActive(true);
-                        }
+                        Item item = new Item();
+                        item.setId(i);
+                        item.setUuid(uuid);
+                        item.setMajor(major);
+                        item.setMinor(minor);
+
+                        realm.insert(item);
+                        i++;
                     }
                 }
             });

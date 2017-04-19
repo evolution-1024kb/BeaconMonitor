@@ -21,17 +21,6 @@ public class Item extends RealmObject {
     private long id;
 
     /**
-     * タイトル
-     */
-    @Required
-    private String title;
-
-    /**
-     * 本文
-     */
-    private String body;
-
-    /**
      * Proximity UUID
      */
     @Required
@@ -46,10 +35,4 @@ public class Item extends RealmObject {
      * Minor
      */
     private int minor;
-
-    /**
-     * ビーコン検出中かどうか
-     */
-    @Required
-    private Boolean active;
 }

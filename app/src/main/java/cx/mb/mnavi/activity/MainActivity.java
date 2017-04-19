@@ -6,35 +6,26 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
-
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.Identifier;
-import org.altbeacon.beacon.Region;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import butterknife.OnClick;
 import cx.mb.mnavi.R;
-import cx.mb.mnavi.adapter.NearItemsAdapter;
-import cx.mb.mnavi.beacon.BeaconManagerBuilder;
-import cx.mb.mnavi.beacon.BeaconMonitorNotifier;
-import cx.mb.mnavi.beacon.BeaconRangeNotifier;
-import cx.mb.mnavi.realm.Item;
+import io.realm.Realm;
 import trikita.log.Log;
 
 /**
  * メインアクティビティ
  */
-public class MainActivity extends AppCompatActivity implements BeaconConsumer {
+public class MainActivity extends AppCompatActivity {
 
     /**
      * 権限リクエスト
@@ -45,22 +36,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
      * Bluetooth有効化リクエスト
      */
     private static final int REQUEST_ENABLE_BLUETOOTH = 200;
-
-    /**
-     * Beacon Manager
-     */
-    private BeaconManager beaconManager;
-
-    /**
-     * 展示物一覧
-     */
-    @BindView(R.id.list_near_items)
-    ListView nearItems;
+    private static final int GO_SCAN = 1000;
 
     /**
      * Realmインスタンス
      */
     private Realm realm;
+
+    @BindView(R.id.start)
+    Button btnScan;
+
+    @BindView(R.id.uuid)
+    EditText editUuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +61,22 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         final boolean isBluetoothEnabled = isBluetoothEnabled();
         if (isBluetoothEnabled) {
             final boolean granted = isGrantedAllPermissions();
-            if (granted) {
-                beaconManager = BeaconManagerBuilder.build(this);
-                beaconManager.bind(this);
-            }
+            Log.i("isGrantedAll ? :" + String.valueOf(granted));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.start)
+    void onClickButton(Button btn) {
+
+        final String uuid = editUuid.getText().toString();
+        if (uuid.equals("")) {
+            Toast.makeText(this, "NO UUID", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        // ListView初期化
-        final RealmResults<Item> items = realm.where(Item.class).equalTo("active", true).findAll().sort("title");
-        final NearItemsAdapter adapter = new NearItemsAdapter(this, items);
-        nearItems.setAdapter(adapter);
+        final Intent intent = ScanActivity.createIntent(this, uuid);
+        startActivityForResult(intent, GO_SCAN);
     }
 
     /**
@@ -133,13 +126,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
-            if (resultCode == Activity.RESULT_OK) {
-                final boolean isGranted = isGrantedAllPermissions();
-                if (isGranted) {
-                    beaconManager = BeaconManagerBuilder.build(this);
-                    beaconManager.bind(this);
-                }
-            }
+            Log.i("resultCode is RESULT_OK ? :" + String.valueOf(resultCode == Activity.RESULT_OK));
+        } else if (requestCode == GO_SCAN) {
+            Log.i("back from scan");
         }
     }
 
@@ -156,10 +145,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 }
             }
 
-            if (grantedAll) {
-                beaconManager = BeaconManagerBuilder.build(this);
-                beaconManager.bind(this);
-            }
+            Log.i("isGrantedAll ? :" + String.valueOf(grantedAll));
         }
     }
 
@@ -167,23 +153,5 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
-        beaconManager.unbind(this);
-    }
-
-    @Override
-    public void onBeaconServiceConnect() {
-
-        final String uuid = getString(R.string.beacon_proximity_uuid);
-        final Identifier identifier = Identifier.parse(uuid);
-        final Region region = new Region("startRangingBeaconsInRegion", identifier, null, null);
-
-        beaconManager.addMonitorNotifier(new BeaconMonitorNotifier(beaconManager));
-        beaconManager.addRangeNotifier(new BeaconRangeNotifier());
-
-        try {
-            beaconManager.startMonitoringBeaconsInRegion(region);
-        } catch (RemoteException e) {
-            Log.i(e);
-        }
     }
 }

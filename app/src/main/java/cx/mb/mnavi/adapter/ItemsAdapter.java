@@ -9,30 +9,22 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import io.realm.OrderedRealmCollection;
-import io.realm.RealmBaseAdapter;
 import cx.mb.mnavi.R;
 import cx.mb.mnavi.realm.Item;
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmBaseAdapter;
 
 /**
- * 展示物一覧用アダプタ
+ * 一覧用アダプタ
  * Created by toshiaki on 2017/01/29.
  */
-public class NearItemsAdapter extends RealmBaseAdapter<Item> implements ListAdapter {
+public class ItemsAdapter extends RealmBaseAdapter<Item> implements ListAdapter {
 
     /**
      * ViewHolder
      */
     private static class ViewHolder {
-        /**
-         * タイトル
-         */
-        TextView title;
-
-        /**
-         * 本文
-         */
-        TextView body;
+        TextView uuid;
     }
 
     /**
@@ -41,8 +33,8 @@ public class NearItemsAdapter extends RealmBaseAdapter<Item> implements ListAdap
      * @param context コンテキスト
      * @param data    データ
      */
-    public NearItemsAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Item> data) {
-        super(context, data);
+    public ItemsAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Item> data) {
+        super(data);
     }
 
     @Override
@@ -53,16 +45,16 @@ public class NearItemsAdapter extends RealmBaseAdapter<Item> implements ListAdap
             convertView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.near_items_item, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.title = (TextView) convertView.findViewById(R.id.item_title);
-            viewHolder.body = (TextView) convertView.findViewById(R.id.item_body);
+            viewHolder.uuid = (TextView) convertView.findViewById(R.id.item_uuid);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        assert adapterData != null;
         final Item item = adapterData.get(position);
-        viewHolder.title.setText(item.getTitle());
-        viewHolder.body.setText(item.getBody());
+        final String v = String.format("%s\t%s\t%s", item.getUuid(), item.getMajor(), item.getMinor());
+        viewHolder.uuid.setText(v);
 
         return convertView;
     }

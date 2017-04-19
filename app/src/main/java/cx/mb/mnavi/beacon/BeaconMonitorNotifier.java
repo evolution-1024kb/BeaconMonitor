@@ -2,6 +2,7 @@ package cx.mb.mnavi.beacon;
 
 import android.os.RemoteException;
 
+import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
@@ -47,21 +48,14 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
         try {
             beaconManager.stopRangingBeaconsInRegion(region);
 
-            final Realm localRealm = Realm.getDefaultInstance();
-            localRealm.beginTransaction();
-            try {
-                final String uuid = region.getId1().toString().toUpperCase();
-                final RealmResults<Item> results = localRealm.where(Item.class).equalTo("uuid", uuid).findAll();
-                for (Item activeItem : results) {
-                    activeItem.setActive(false);
-                }
-
-                localRealm.commitTransaction();
-            } catch (Exception e) {
-                Log.e(e);
-                localRealm.cancelTransaction();
+            try (Realm localRealm = Realm.getDefaultInstance()) {
+                localRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.delete(Item.class);
+                    }
+                });
             }
-
         } catch (RemoteException e) {
             Log.e(e);
         }
