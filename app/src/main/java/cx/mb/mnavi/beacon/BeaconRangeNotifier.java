@@ -1,13 +1,11 @@
 package cx.mb.mnavi.beacon;
 
-import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
 import java.util.Collection;
-import java.util.Iterator;
 
-import cx.mb.mnavi.realm.Item;
+import cx.mb.mnavi.realm.Beacon;
 import io.realm.Realm;
 import trikita.log.Log;
 
@@ -18,7 +16,7 @@ import trikita.log.Log;
 public class BeaconRangeNotifier implements RangeNotifier {
 
     @Override
-    public void didRangeBeaconsInRegion(final Collection<Beacon> collection, Region region) {
+    public void didRangeBeaconsInRegion(final Collection<org.altbeacon.beacon.Beacon> collection, Region region) {
         if (collection.isEmpty()) {
             return;
         }
@@ -27,29 +25,33 @@ public class BeaconRangeNotifier implements RangeNotifier {
             localRealm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    realm.delete(Item.class);
+                    realm.delete(Beacon.class);
 
                     int i = 0;
-                    for (Beacon col : collection) {
+                    for (org.altbeacon.beacon.Beacon col : collection) {
                         final String uuid = col.getId1().toString().toUpperCase();
                         final int major = col.getId2().toInt();
                         final int minor = col.getId3().toInt();
+                        final int rssi = col.getRssi();
+                        final double distance = col.getDistance();
 
-                        Item item = new Item();
-                        item.setId(i);
-                        item.setUuid(uuid);
-                        item.setMajor(major);
-                        item.setMinor(minor);
+                        Beacon beacon = new Beacon();
+                        beacon.setId(i);
+                        beacon.setUuid(uuid);
+                        beacon.setMajor(major);
+                        beacon.setMinor(minor);
+                        beacon.setRssi(rssi);
+                        beacon.setDistance(distance);
 
-                        realm.insert(item);
+                        realm.insert(beacon);
                         i++;
                     }
                 }
             });
         }
 
-        for (final Beacon beacon : collection) {
-            Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getDistance());
+        for (final org.altbeacon.beacon.Beacon beacon : collection) {
+            Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getRssi() + ":" + beacon.getDistance());
         }
     }
 }

@@ -2,14 +2,12 @@ package cx.mb.mnavi.beacon;
 
 import android.os.RemoteException;
 
-import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 
+import cx.mb.mnavi.realm.Beacon;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import cx.mb.mnavi.realm.Item;
 import trikita.log.Log;
 
 /**
@@ -52,7 +50,7 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
                 localRealm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        realm.delete(Item.class);
+                        realm.delete(Beacon.class);
                     }
                 });
             }

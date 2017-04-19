@@ -20,9 +20,10 @@ import cx.mb.mnavi.adapter.ItemsAdapter;
 import cx.mb.mnavi.beacon.BeaconManagerBuilder;
 import cx.mb.mnavi.beacon.BeaconMonitorNotifier;
 import cx.mb.mnavi.beacon.BeaconRangeNotifier;
-import cx.mb.mnavi.realm.Item;
+import cx.mb.mnavi.realm.Beacon;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import trikita.log.Log;
 
 public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
@@ -70,9 +71,9 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
         beaconManager.bind(this);
 
         // ListView初期化
-        final RealmResults<Item> items = realm.where(Item.class).findAll().sort("uuid").sort("major").sort("minor");
-        final ItemsAdapter adapter = new ItemsAdapter(this, items);
-        beacons.setAdapter(adapter);
+        final RealmResults<Beacon> beacons = realm.where(Beacon.class).findAllSorted(new String[]{"uuid", "major", "minor"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
+        final ItemsAdapter adapter = new ItemsAdapter(this, beacons);
+        this.beacons.setAdapter(adapter);
 
         uuid = getIntent().getStringExtra("UUID");
     }

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import cx.mb.mnavi.R;
-import cx.mb.mnavi.realm.Item;
+import cx.mb.mnavi.realm.Beacon;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 
@@ -20,7 +20,7 @@ import io.realm.RealmBaseAdapter;
  * 一覧用アダプタ
  * Created by toshiaki on 2017/01/29.
  */
-public class ItemsAdapter extends RealmBaseAdapter<Item> implements ListAdapter {
+public class ItemsAdapter extends RealmBaseAdapter<Beacon> implements ListAdapter {
 
     /**
      * ViewHolder
@@ -35,7 +35,7 @@ public class ItemsAdapter extends RealmBaseAdapter<Item> implements ListAdapter 
      * @param context コンテキスト
      * @param data    データ
      */
-    public ItemsAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Item> data) {
+    public ItemsAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Beacon> data) {
         super(data);
     }
 
@@ -54,8 +54,8 @@ public class ItemsAdapter extends RealmBaseAdapter<Item> implements ListAdapter 
         }
 
         assert adapterData != null;
-        final Item item = adapterData.get(position);
-        final String v = String.format(Locale.ENGLISH, "%s/%3d/%3d", item.getUuid(), item.getMajor(), item.getMinor());
+        final Beacon beacon = adapterData.get(position);
+        final String v = String.format(Locale.US, "UUID: %s\nMAJOR: %3d\nMINOR: %3d\nRSSI: %d\nDISTANCE: %f", beacon.getUuid(), beacon.getMajor(), beacon.getMinor(), beacon.getRssi(), beacon.getDistance());
         viewHolder.uuid.setText(v);
 
         return convertView;

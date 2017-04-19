@@ -12,27 +12,18 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Item extends RealmObject {
+public class Beacon extends RealmObject {
 
-    /**
-     * ID
-     */
     @PrimaryKey
     private long id;
 
-    /**
-     * Proximity UUID
-     */
     @Required
     private String uuid;
 
-    /**
-     * Major
-     */
     private int major;
 
-    /**
-     * Minor
-     */
     private int minor;
+
+    private int rssi;
+    private double distance;
 }
