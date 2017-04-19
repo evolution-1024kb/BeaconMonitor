@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import cx.mb.mnavi.R;
 import cx.mb.mnavi.realm.Item;
 import io.realm.OrderedRealmCollection;
@@ -53,7 +55,7 @@ public class ItemsAdapter extends RealmBaseAdapter<Item> implements ListAdapter 
 
         assert adapterData != null;
         final Item item = adapterData.get(position);
-        final String v = String.format("%s\t%s\t%s", item.getUuid(), item.getMajor(), item.getMinor());
+        final String v = String.format(Locale.ENGLISH, "%s/%3d/%3d", item.getUuid(), item.getMajor(), item.getMinor());
         viewHolder.uuid.setText(v);
 
         return convertView;
