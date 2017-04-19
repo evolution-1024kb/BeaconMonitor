@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +42,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private Realm realm;
 
-    @BindView(R.id.start)
+    @BindView(R.id.btn_start)
     Button btnScan;
 
-    @BindView(R.id.uuid)
+    @BindView(R.id.txt_uuid)
     EditText editUuid;
+
+    @BindView(R.id.btn_clear)
+    Button btnClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +68,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.start)
+    @OnClick(R.id.btn_start)
     void onClickButton(Button btn) {
 
         final String uuid = editUuid.getText().toString();
         final Intent intent = ScanActivity.createIntent(this, uuid);
         startActivityForResult(intent, GO_SCAN);
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.btn_clear)
+    void onBtnClearClick() {
+        editUuid.setText("");
     }
 
     /**

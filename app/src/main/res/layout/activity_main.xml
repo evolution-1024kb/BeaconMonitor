@@ -16,12 +16,16 @@
 
     <EditText
         android:text="666a2d68-632d-636f-6e63-696572676531"
-        android:id="@+id/uuid"
+        android:id="@+id/txt_uuid"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"/>
     <Button
-        android:id="@+id/start"
+        android:id="@+id/btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:text="SCAN"/>
+    <Button
+        android:id="@+id/btn_clear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="CLEAR"/>
 </LinearLayout>
