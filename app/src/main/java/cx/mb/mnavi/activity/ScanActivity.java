@@ -74,8 +74,8 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
         realm = Realm.getDefaultInstance();
 
         beaconManager = BeaconManagerBuilder.build(this);
-        beaconManager.setForegroundScanPeriod(getIntent().getIntExtra(KEY_PERIOD, 2000));
-        beaconManager.setForegroundBetweenScanPeriod(getIntent().getIntExtra(KEY_BETWEEN, 10000));
+        beaconManager.setForegroundScanPeriod(getIntent().getIntExtra(KEY_PERIOD, 200));
+        beaconManager.setForegroundBetweenScanPeriod(getIntent().getIntExtra(KEY_BETWEEN, 100));
         beaconManager.bind(this);
 
         // ListView初期化

@@ -25,14 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="2000"
+        android:text="200"
         android:inputType="number"/>
     <EditText
         android:id="@+id/edit_between"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="10000"
+        android:text="100"
         android:inputType="number"/>
     <Button
         android:id="@+id/btn_start"
