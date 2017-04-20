@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         final String uuid = editUuid.getText().toString();
         final int period = Integer.parseInt(editPeriod.getText().toString());
-        final int btwn = Integer.parseInt(editBetween.getText().toString());
-        final Intent intent = ScanActivity.createIntent(this, uuid, period, btwn);
+        final int betweenPeriod = Integer.parseInt(editBetween.getText().toString());
+        final Intent intent = ScanActivity.createIntent(this, uuid, period, betweenPeriod);
         startActivityForResult(intent, GO_SCAN);
     }
 

@@ -53,12 +53,12 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
      *
      * @return インテント
      */
-    public static Intent createIntent(Context context, String uuid, int period, int btwn) {
+    public static Intent createIntent(Context context, String uuid, int period, int betweenPeriod) {
 
         final Intent intent = new Intent(context, ScanActivity.class);
         intent.putExtra(KEY_UUID, uuid);
         intent.putExtra(KEY_PERIOD, period);
-        intent.putExtra(KEY_BETWEEN, btwn);
+        intent.putExtra(KEY_BETWEEN, betweenPeriod);
 
         return intent;
     }
