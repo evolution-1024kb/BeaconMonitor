@@ -27,4 +27,9 @@ public class BeaconHistory extends RealmObject {
      * Distance
      */
     private double distance;
+
+    /**
+     * txPower
+     */
+    private int txPower;
 }

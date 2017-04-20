@@ -37,6 +37,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         final int minor = col.getId3().toInt();
                         final int rssi = col.getRssi();
                         final double distance = col.getDistance();
+                        final int txPower = col.getTxPower();
                         final String id = String.format(Locale.US, "%s_%d_%d", uuid, major, minor);
 
                         BeaconItem beacon = localRealm.where(BeaconItem.class).equalTo("id", id).findFirst();
@@ -57,6 +58,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         history.setScanAt(new Date());
                         history.setRssi(rssi);
                         history.setDistance(distance);
+                        history.setTxPower(txPower);
 
                         beacon.getHistories().add(history);
                     }
