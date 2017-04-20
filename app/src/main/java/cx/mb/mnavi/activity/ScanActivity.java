@@ -20,7 +20,7 @@ import cx.mb.mnavi.adapter.ItemsAdapter;
 import cx.mb.mnavi.beacon.BeaconManagerBuilder;
 import cx.mb.mnavi.beacon.BeaconMonitorNotifier;
 import cx.mb.mnavi.beacon.BeaconRangeNotifier;
-import cx.mb.mnavi.realm.Beacon;
+import cx.mb.mnavi.realm.BeaconItem;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -79,7 +79,7 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
         beaconManager.bind(this);
 
         // ListView初期化
-        final RealmResults<Beacon> beacons = realm.where(Beacon.class).findAllSorted(new String[]{"uuid", "major", "minor"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
+        final RealmResults<BeaconItem> beacons = realm.where(BeaconItem.class).findAllSorted(new String[]{"uuid", "major", "minor"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
         final ItemsAdapter adapter = new ItemsAdapter(this, beacons);
         this.beacons.setAdapter(adapter);
 
@@ -89,6 +89,16 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        final Identifier identifier = (uuid == null || uuid.equals("")) ? null : Identifier.parse(uuid);
+        final Region region = new Region("startRangingBeaconsInRegion", identifier, null, null);
+
+        try {
+            beaconManager.stopMonitoringBeaconsInRegion(region);
+            beaconManager.stopRangingBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            Log.e(e);
+        }
         beaconManager.unbind(this);
         realm.close();
     }

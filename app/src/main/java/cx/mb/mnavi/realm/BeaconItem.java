@@ -1,5 +1,6 @@
 package cx.mb.mnavi.realm;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -7,23 +8,37 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * アイテム情報
+ * Beacon.
  * Created by toshiaki on 2017/01/22.
  */
 @Getter
 @Setter
-public class Beacon extends RealmObject {
+public class BeaconItem extends RealmObject {
 
+    /**
+     * PK(uuid_major_minor)
+     */
     @PrimaryKey
-    private long id;
+    private String id;
 
+    /**
+     * Proximity UUID
+     */
     @Required
     private String uuid;
 
+    /**
+     * Major
+     */
     private int major;
 
+    /**
+     * Minor
+     */
     private int minor;
 
-    private int rssi;
-    private double distance;
+    /**
+     * history of detection.
+     */
+    private RealmList<BeaconHistory> histories;
 }

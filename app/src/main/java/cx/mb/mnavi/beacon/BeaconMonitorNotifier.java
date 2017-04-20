@@ -6,8 +6,6 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 
-import cx.mb.mnavi.realm.Beacon;
-import io.realm.Realm;
 import trikita.log.Log;
 
 /**
@@ -45,15 +43,6 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
         Log.i("I no longer see an beacon");
         try {
             beaconManager.stopRangingBeaconsInRegion(region);
-
-            try (Realm localRealm = Realm.getDefaultInstance()) {
-                localRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        realm.delete(Beacon.class);
-                    }
-                });
-            }
         } catch (RemoteException e) {
             Log.e(e);
         }
