@@ -48,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.txt_uuid)
     EditText editUuid;
 
+    @BindView(R.id.edit_period)
+    EditText editPeriod;
+
+    @BindView(R.id.edit_between)
+    EditText editBetween;
+
     @BindView(R.id.btn_clear)
     Button btnClear;
 
@@ -72,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
     void onClickButton(Button btn) {
 
         final String uuid = editUuid.getText().toString();
-        final Intent intent = ScanActivity.createIntent(this, uuid);
+        final int period = Integer.parseInt(editPeriod.getText().toString());
+        final int btwn = Integer.parseInt(editBetween.getText().toString());
+        final Intent intent = ScanActivity.createIntent(this, uuid, period, btwn);
         startActivityForResult(intent, GO_SCAN);
     }
 

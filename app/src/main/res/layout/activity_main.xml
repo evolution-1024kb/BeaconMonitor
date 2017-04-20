@@ -15,11 +15,25 @@
     app:flexWrap="nowrap" tools:context="cx.mb.mnavi.activity.MainActivity">
 
     <EditText
-        android:text="666a2d68-632d-636f-6e63-696572676531"
         android:id="@+id/txt_uuid"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"/>
+        android:inputType="textPersonName"
+        android:text="666a2d68-632d-636f-6e63-696572676531"/>
+    <EditText
+        android:id="@+id/edit_period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="2000"
+        android:inputType="number"/>
+    <EditText
+        android:id="@+id/edit_between"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="10000"
+        android:inputType="number"/>
     <Button
         android:id="@+id/btn_start"
         android:layout_width="match_parent"

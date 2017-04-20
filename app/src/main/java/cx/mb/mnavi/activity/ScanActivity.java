@@ -40,6 +40,10 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
     @BindView(R.id.beacons)
     ListView beacons;
 
+    private static final String KEY_UUID = "UUID";
+    private static final String KEY_PERIOD = "PERIOD";
+    private static final String KEY_BETWEEN = "BETWEEN";
+
     /**
      * UUID
      */
@@ -49,10 +53,12 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
      *
      * @return インテント
      */
-    public static Intent createIntent(Context context, String uuid) {
+    public static Intent createIntent(Context context, String uuid, int period, int btwn) {
 
         final Intent intent = new Intent(context, ScanActivity.class);
-        intent.putExtra("UUID", uuid);
+        intent.putExtra(KEY_UUID, uuid);
+        intent.putExtra(KEY_PERIOD, period);
+        intent.putExtra(KEY_BETWEEN, btwn);
 
         return intent;
     }
@@ -68,6 +74,8 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
         realm = Realm.getDefaultInstance();
 
         beaconManager = BeaconManagerBuilder.build(this);
+        beaconManager.setForegroundScanPeriod(getIntent().getIntExtra(KEY_PERIOD, 2000));
+        beaconManager.setForegroundBetweenScanPeriod(getIntent().getIntExtra(KEY_BETWEEN, 10000));
         beaconManager.bind(this);
 
         // ListView初期化
@@ -75,7 +83,7 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
         final ItemsAdapter adapter = new ItemsAdapter(this, beacons);
         this.beacons.setAdapter(adapter);
 
-        uuid = getIntent().getStringExtra("UUID");
+        uuid = getIntent().getStringExtra(KEY_UUID);
     }
 
     @Override
