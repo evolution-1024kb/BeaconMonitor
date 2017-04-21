@@ -16,11 +16,11 @@ import org.altbeacon.beacon.Region;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cx.mb.mnavi.R;
-import cx.mb.mnavi.adapter.ItemsAdapter;
+import cx.mb.mnavi.adapter.BeaconHistoryAdapter;
 import cx.mb.mnavi.beacon.BeaconManagerBuilder;
 import cx.mb.mnavi.beacon.BeaconMonitorNotifier;
 import cx.mb.mnavi.beacon.BeaconRangeNotifier;
-import cx.mb.mnavi.realm.BeaconItem;
+import cx.mb.mnavi.realm.BeaconHistory;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -76,16 +76,11 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
         realm = Realm.getDefaultInstance();
 
         // ListView初期化
-        final RealmResults<BeaconItem> beacons = realm.where(BeaconItem.class).findAllSorted(new String[]{"uuid", "major", "minor"}, new Sort[]{Sort.ASCENDING, Sort.ASCENDING, Sort.ASCENDING});
-        final ItemsAdapter adapter = new ItemsAdapter(this, beacons);
+        final RealmResults<BeaconHistory> beacons = realm.where(BeaconHistory.class).findAllSorted("scanAt", Sort.DESCENDING);
+        final BeaconHistoryAdapter adapter = new BeaconHistoryAdapter(this, beacons);
         this.beacons.setAdapter(adapter);
 
         this.uuid = getIntent().getStringExtra(KEY_UUID);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         if (beaconManager == null) {
             beaconManager = BeaconManagerBuilder.build(this);
@@ -95,11 +90,10 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
 
         final Region region = createRegion();
-
         try {
             beaconManager.stopMonitoringBeaconsInRegion(region);
             beaconManager.stopRangingBeaconsInRegion(region);
@@ -110,11 +104,7 @@ public class ScanActivity extends AppCompatActivity implements BeaconConsumer {
         }
         beaconManager.unbind(this);
         beaconManager = null;
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
         realm.close();
     }
 
