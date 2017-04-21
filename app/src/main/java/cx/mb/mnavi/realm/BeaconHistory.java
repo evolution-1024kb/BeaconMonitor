@@ -3,6 +3,7 @@ package cx.mb.mnavi.realm;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Required;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,4 +33,10 @@ public class BeaconHistory extends RealmObject {
      * txPower
      */
     private int txPower;
+
+    /**
+     * 親要素へのバックリンク
+     */
+    @Required
+    private BeaconItem owner;
 }

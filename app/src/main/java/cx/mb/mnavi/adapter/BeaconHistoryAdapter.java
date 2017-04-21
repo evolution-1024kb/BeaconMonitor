@@ -58,8 +58,8 @@ public class BeaconHistoryAdapter extends RealmBaseAdapter<BeaconHistory> implem
         assert adapterData != null;
         final BeaconHistory beacon = adapterData.get(position);
 
-        final String date = DateFormat.format("yyyy/MM/dd kk:mm:ss", beacon.getScanAt()).toString();
-        final String v = String.format(Locale.US, "ScanAt:%s - 距離:%f", date, beacon.getDistance());
+        final String date = DateFormat.format("kk:mm:ss", beacon.getScanAt()).toString();
+        final String v = String.format(Locale.US, "UUID:%s, ScanAt:%s - 距離:%f", beacon.getOwner().getUuid(), date, beacon.getDistance());
         viewHolder.uuid.setText(v);
 
         return convertView;

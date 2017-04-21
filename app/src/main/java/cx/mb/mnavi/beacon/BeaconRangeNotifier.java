@@ -59,6 +59,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         history.setRssi(rssi);
                         history.setDistance(distance);
                         history.setTxPower(txPower);
+                        history.setOwner(beacon);
 
                         beacon.getHistories().add(history);
                     }
