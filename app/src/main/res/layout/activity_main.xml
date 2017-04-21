@@ -15,31 +15,17 @@
     app:flexWrap="nowrap" tools:context="cx.mb.mnavi.activity.MainActivity">
 
     <EditText
-        android:id="@+id/txt_uuid"
+        android:id="@+id/main_edit_uuid"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:text="666a2d68-632d-636f-6e63-696572676531"/>
-    <EditText
-        android:id="@+id/edit_period"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="200"
-        android:inputType="number"/>
-    <EditText
-        android:id="@+id/edit_between"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="100"
-        android:inputType="number"/>
     <Button
-        android:id="@+id/btn_start"
+        android:id="@+id/main_btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:text="SCAN"/>
     <Button
-        android:id="@+id/btn_clear"
+        android:id="@+id/main_btn_clear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:text="CLEAR"/>
 </LinearLayout>

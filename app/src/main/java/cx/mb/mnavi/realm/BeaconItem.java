@@ -38,7 +38,7 @@ public class BeaconItem extends RealmObject {
     private int minor;
 
     /**
-     * history of detection.
+     * 検出履歴一覧
      */
     private RealmList<BeaconHistory> histories;
 }

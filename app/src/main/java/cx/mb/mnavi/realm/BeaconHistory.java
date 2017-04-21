@@ -7,14 +7,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * history of beacon detection.
+ * ビーコン検出履歴
  * Created by toshiaki on 2017/04/20.
  */
 @Getter
 @Setter
 public class BeaconHistory extends RealmObject {
     /**
-     * datetime of detection.
+     * 検出日時
      */
     private Date scanAt;
 
@@ -24,7 +24,7 @@ public class BeaconHistory extends RealmObject {
     private int rssi;
 
     /**
-     * Distance
+     * おおよその距離
      */
     private double distance;
 
