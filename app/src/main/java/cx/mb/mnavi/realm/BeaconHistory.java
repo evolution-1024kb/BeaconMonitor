@@ -37,6 +37,5 @@ public class BeaconHistory extends RealmObject {
     /**
      * 親要素へのバックリンク
      */
-    @Required
     private BeaconItem owner;
 }
