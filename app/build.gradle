@@ -42,6 +42,7 @@ dependencies {
     compile 'com.google.android:flexbox:0.2.5'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.android.support:design:25.3.1'
+    compile 'com.hynnet:commons-lang3:3.4'
     testCompile 'junit:junit:4.12'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'

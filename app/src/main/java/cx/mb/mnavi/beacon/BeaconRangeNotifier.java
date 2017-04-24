@@ -1,9 +1,12 @@
 package cx.mb.mnavi.beacon;
 
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.apache.commons.lang3.time.DateUtils;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
@@ -11,7 +14,6 @@ import java.util.Locale;
 import cx.mb.mnavi.realm.BeaconHistory;
 import cx.mb.mnavi.realm.BeaconItem;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import trikita.log.Log;
 
 /**
@@ -55,7 +57,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         }
 
                         final BeaconHistory history = realm.createObject(BeaconHistory.class);
-                        history.setScanAt(new Date());
+                        history.setScanAt(DateUtils.truncate(new Date(), Calendar.SECOND));
                         history.setRssi(rssi);
                         history.setDistance(distance);
                         history.setTxPower(txPower);
