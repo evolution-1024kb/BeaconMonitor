@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor.realm;
+package cx.mb.monitor.realm;
 
 import java.util.Date;
 

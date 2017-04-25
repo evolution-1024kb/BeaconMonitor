@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor.activity;
+package cx.mb.monitor.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,8 +15,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cx.mb.beaconmonitor.R;
-import cx.mb.beaconmonitor.service.MainService;
+import cx.mb.monitor.R;
+import cx.mb.monitor.service.MainService;
 import trikita.log.Log;
 
 /**

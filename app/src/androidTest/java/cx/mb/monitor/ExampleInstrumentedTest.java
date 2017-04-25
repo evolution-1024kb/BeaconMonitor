@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor;
+package cx.mb.monitor;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor.adapter;
+package cx.mb.monitor.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import cx.mb.beaconmonitor.R;
-import cx.mb.beaconmonitor.realm.BeaconHistory;
+import cx.mb.monitor.R;
+import cx.mb.monitor.realm.BeaconHistory;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 

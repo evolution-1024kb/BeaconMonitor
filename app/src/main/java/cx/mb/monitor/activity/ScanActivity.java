@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor.activity;
+package cx.mb.monitor.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +15,12 @@ import org.altbeacon.beacon.Region;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cx.mb.beaconmonitor.R;
-import cx.mb.beaconmonitor.adapter.BeaconHistoryAdapter;
-import cx.mb.beaconmonitor.beacon.BeaconManagerBuilder;
-import cx.mb.beaconmonitor.beacon.BeaconMonitorNotifier;
-import cx.mb.beaconmonitor.beacon.BeaconRangeNotifier;
-import cx.mb.beaconmonitor.realm.BeaconHistory;
+import cx.mb.monitor.R;
+import cx.mb.monitor.adapter.BeaconHistoryAdapter;
+import cx.mb.monitor.beacon.BeaconManagerBuilder;
+import cx.mb.monitor.beacon.BeaconMonitorNotifier;
+import cx.mb.monitor.beacon.BeaconRangeNotifier;
+import cx.mb.monitor.realm.BeaconHistory;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;

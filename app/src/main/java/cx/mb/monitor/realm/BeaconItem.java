@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor.realm;
+package cx.mb.monitor.realm;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
