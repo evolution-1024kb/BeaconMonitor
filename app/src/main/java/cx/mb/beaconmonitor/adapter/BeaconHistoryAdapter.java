@@ -1,8 +1,9 @@
-package cx.mb.mnavi.adapter;
+package cx.mb.beaconmonitor.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,8 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import cx.mb.mnavi.R;
-import cx.mb.mnavi.realm.BeaconItem;
+import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.realm.BeaconHistory;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 
@@ -20,7 +21,7 @@ import io.realm.RealmBaseAdapter;
  * 一覧用アダプタ
  * Created by toshiaki on 2017/01/29.
  */
-public class ItemsAdapter extends RealmBaseAdapter<BeaconItem> implements ListAdapter {
+public class BeaconHistoryAdapter extends RealmBaseAdapter<BeaconHistory> implements ListAdapter {
 
     /**
      * ViewHolder
@@ -35,7 +36,7 @@ public class ItemsAdapter extends RealmBaseAdapter<BeaconItem> implements ListAd
      * @param context コンテキスト
      * @param data    データ
      */
-    public ItemsAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<BeaconItem> data) {
+    public BeaconHistoryAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<BeaconHistory> data) {
         super(data);
     }
 
@@ -54,8 +55,10 @@ public class ItemsAdapter extends RealmBaseAdapter<BeaconItem> implements ListAd
         }
 
         assert adapterData != null;
-        final BeaconItem beacon = adapterData.get(position);
-        final String v = String.format(Locale.US, "UUID: %s", beacon.getUuid());
+        final BeaconHistory beacon = adapterData.get(position);
+
+        final String date = DateFormat.format("kk:mm:ss", beacon.getScanAt()).toString();
+        final String v = String.format(Locale.US, "UUID:%s, ScanAt:%s - 距離:%f", beacon.getOwner().getUuid(), date, beacon.getDistance());
         viewHolder.uuid.setText(v);
 
         return convertView;

@@ -1,9 +1,8 @@
-package cx.mb.mnavi.realm;
+package cx.mb.beaconmonitor.realm;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Required;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,4 +1,4 @@
-package cx.mb.mnavi.application;
+package cx.mb.beaconmonitor.application;
 
 import android.app.Application;
 
@@ -6,7 +6,7 @@ import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
-import cx.mb.mnavi.BuildConfig;
+import cx.mb.beaconmonitor.BuildConfig;
 import io.realm.Realm;
 
 /**

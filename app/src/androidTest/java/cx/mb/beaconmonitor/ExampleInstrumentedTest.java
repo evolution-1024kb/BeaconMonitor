@@ -1,4 +1,4 @@
-package cx.mb.mnavi;
+package cx.mb.beaconmonitor;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package cx.mb.mnavi;
+package cx.mb.beaconmonitor;
 
 import org.junit.Test;
 

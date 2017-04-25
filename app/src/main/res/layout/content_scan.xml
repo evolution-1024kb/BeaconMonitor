@@ -11,7 +11,7 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cx.mb.mnavi.activity.ScanActivity"
+    tools:context="cx.mb.beaconmonitor.activity.ScanActivity"
     tools:showIn="@layout/activity_scan">
 
     <ListView

@@ -1,4 +1,4 @@
-package cx.mb.mnavi.beacon;
+package cx.mb.beaconmonitor.beacon;
 
 import android.os.RemoteException;
 

@@ -1,4 +1,4 @@
-package cx.mb.mnavi.activity;
+package cx.mb.beaconmonitor.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,8 +15,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cx.mb.mnavi.R;
-import cx.mb.mnavi.service.MainService;
+import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.service.MainService;
 import trikita.log.Log;
 
 /**
