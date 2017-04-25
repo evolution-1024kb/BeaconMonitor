@@ -1,8 +1,6 @@
 package cx.mb.mnavi.activity;
 
-import android.Manifest;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -10,15 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cx.mb.mnavi.R;
-import io.realm.Realm;
+import cx.mb.mnavi.service.MainService;
 import trikita.log.Log;
 
 /**
@@ -27,35 +25,32 @@ import trikita.log.Log;
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * 権限リクエスト
+     * 検出画面リクエスト
      */
-    private static final int REQUEST_PERMISSIONS = 100;
-
-    /**
-     * Bluetooth有効化リクエスト
-     */
-    private static final int REQUEST_ENABLE_BLUETOOTH = 200;
     private static final int GO_SCAN = 1000;
 
     /**
-     * Realmインスタンス
+     * スキャンボタン
      */
-    private Realm realm;
-
-    @BindView(R.id.btn_start)
+    @BindView(R.id.main_btn_start)
     Button btnScan;
 
-    @BindView(R.id.txt_uuid)
+    /**
+     * UUIDテキストエディット
+     */
+    @BindView(R.id.main_edit_uuid)
     EditText editUuid;
 
-    @BindView(R.id.edit_period)
-    EditText editPeriod;
-
-    @BindView(R.id.edit_between)
-    EditText editBetween;
-
-    @BindView(R.id.btn_clear)
+    /**
+     * クリアボタン
+     */
+    @BindView(R.id.main_btn_clear)
     Button btnClear;
+
+    /**
+     * 画面用サービス
+     */
+    private MainService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,80 +58,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        realm = Realm.getDefaultInstance();
+
+        service = new MainService(this);
 
         // Bluetooth自体のチェック
-        final boolean isBluetoothEnabled = isBluetoothEnabled();
-        if (isBluetoothEnabled) {
-            final boolean granted = isGrantedAllPermissions();
-            Log.i("isGrantedAll ? :" + String.valueOf(granted));
+        if (!service.isBluetoothEnabled()) {
+            service.requestBluetooth();
+        } else {
+            final List<String> lackedPermissions = service.getLackedPermissions();
+            if (!lackedPermissions.isEmpty()) {
+                service.requestPermissions(lackedPermissions);
+            }
         }
     }
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.btn_start)
+    @OnClick(R.id.main_btn_start)
     void onClickButton(Button btn) {
 
+        if (!service.hasAllPermissions()) {
+            Toast.makeText(this, getString(R.string.error_permissions), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         final String uuid = editUuid.getText().toString();
-        final int period = Integer.parseInt(editPeriod.getText().toString());
-        final int betweenPeriod = Integer.parseInt(editBetween.getText().toString());
-        final Intent intent = ScanActivity.createIntent(this, uuid, period, betweenPeriod);
+        final Intent intent = ScanActivity.createIntent(this, uuid);
         startActivityForResult(intent, GO_SCAN);
     }
 
     @SuppressWarnings("unused")
-    @OnClick(R.id.btn_clear)
+    @OnClick(R.id.main_btn_clear)
     void onBtnClearClick() {
         editUuid.setText("");
     }
 
-    /**
-     * Bluetoothが使えるかどうか
-     *
-     * @return 有効ならTRUE
-     */
-    private boolean isBluetoothEnabled() {
-
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent btOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(btOn, REQUEST_ENABLE_BLUETOOTH);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 位置情報およびBluetoothが使用出来るか
-     *
-     * @return 全て使用可能ならTRUE
-     */
-    private boolean isGrantedAllPermissions() {
-
-        final List<String> permissions = new ArrayList<>();
-        if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-
-        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.BLUETOOTH);
-        }
-        if (this.checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.BLUETOOTH_ADMIN);
-        }
-
-        if (!permissions.isEmpty()) {
-            requestPermissions(permissions.toArray(new String[0]), REQUEST_PERMISSIONS);
-            return false;
-        }
-
-        return true;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_ENABLE_BLUETOOTH) {
+        if (requestCode == MainService.REQUEST_ENABLE_BLUETOOTH) {
             Log.i("resultCode is RESULT_OK ? :" + String.valueOf(resultCode == Activity.RESULT_OK));
         } else if (requestCode == GO_SCAN) {
             Log.i("back from scan");
@@ -146,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == REQUEST_PERMISSIONS) {
+        if (requestCode == MainService.REQUEST_PERMISSIONS) {
 
             boolean grantedAll = true;
             for (int result : grantResults) {
@@ -158,11 +116,5 @@ public class MainActivity extends AppCompatActivity {
 
             Log.i("isGrantedAll ? :" + String.valueOf(grantedAll));
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
     }
 }
