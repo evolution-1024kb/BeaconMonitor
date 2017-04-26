@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Beacon.
+ * 検出したビーコン一件を表すクラス
  * Created by toshiaki on 2017/01/22.
  */
 @Getter
@@ -36,6 +36,11 @@ public class BeaconItem extends RealmObject {
      * Minor
      */
     private int minor;
+
+    /**
+     * ビーコンの状態を表す
+     */
+    private BeaconStatus status;
 
     /**
      * 検出履歴一覧

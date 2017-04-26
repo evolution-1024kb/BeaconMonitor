@@ -1,56 +1,57 @@
 package cx.mb.monitor.activity;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.Region;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cx.mb.monitor.R;
+import cx.mb.monitor.beacon.BeaconManagerBuilder;
+import cx.mb.monitor.beacon.BeaconMonitorNotifier;
+import cx.mb.monitor.beacon.BeaconRangeNotifier;
 import cx.mb.monitor.service.MainService;
 import trikita.log.Log;
 
 /**
  * メインアクティビティ
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BeaconConsumer {
+
+    private static final String KEY_UUID = "UUID";
+    private static final String KEY_PERIOD = "PERIOD";
+
+//    /**
+//     * 一覧用フラグメント
+//     */
+//    @BindView(R.id.fragment_list)
+//    Fragment fragmentList;
+//
+//    /**
+//     * グラフ用フラグメント
+//     */
+//    @BindView(R.id.fragment_graph)
+//    Fragment fragmentGraph;
 
     /**
-     * 検出画面リクエスト
+     * Beacon Manager
      */
-    private static final int GO_SCAN = 1000;
-
-    /**
-     * スキャンボタン
-     */
-    @BindView(R.id.main_btn_start)
-    Button btnScan;
-
-    /**
-     * UUIDテキストエディット
-     */
-    @BindView(R.id.main_edit_uuid)
-    EditText editUuid;
-
-    /**
-     * クリアボタン
-     */
-    @BindView(R.id.main_btn_clear)
-    Button btnClear;
+    private BeaconManager beaconManager = null;
 
     /**
      * 画面用サービス
      */
     private MainService service;
+    private Region region;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,36 +69,9 @@ public class MainActivity extends AppCompatActivity {
             final List<String> lackedPermissions = service.getLackedPermissions();
             if (!lackedPermissions.isEmpty()) {
                 service.requestPermissions(lackedPermissions);
+            } else {
+                bindBeaconManager();
             }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @OnClick(R.id.main_btn_start)
-    void onClickButton(Button btn) {
-
-        if (!service.hasAllPermissions()) {
-            Toast.makeText(this, getString(R.string.error_permissions), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        final String uuid = editUuid.getText().toString();
-        final Intent intent = ScanActivity.createIntent(this, uuid);
-        startActivityForResult(intent, GO_SCAN);
-    }
-
-    @SuppressWarnings("unused")
-    @OnClick(R.id.main_btn_clear)
-    void onBtnClearClick() {
-        editUuid.setText("");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MainService.REQUEST_ENABLE_BLUETOOTH) {
-            Log.i("resultCode is RESULT_OK ? :" + String.valueOf(resultCode == Activity.RESULT_OK));
-        } else if (requestCode == GO_SCAN) {
-            Log.i("back from scan");
         }
     }
 
@@ -115,6 +89,56 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Log.i("isGrantedAll ? :" + String.valueOf(grantedAll));
+
+            if (grantedAll) {
+                bindBeaconManager();
+            }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            beaconManager.stopMonitoringBeaconsInRegion(region);
+            beaconManager.stopRangingBeaconsInRegion(region);
+            beaconManager.removeAllMonitorNotifiers();
+            beaconManager.removeAllRangeNotifiers();
+        } catch (RemoteException e) {
+            Log.e(e);
+        }
+        beaconManager.unbind(this);
+        beaconManager = null;
+
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+
+        region = new Region("region", null, null, null);
+
+        beaconManager.addMonitorNotifier(new BeaconMonitorNotifier(beaconManager));
+        beaconManager.addRangeNotifier(new BeaconRangeNotifier());
+
+        try {
+            beaconManager.startMonitoringBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            Log.i(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * ビーコンマネージャへの接続
+     */
+    private void bindBeaconManager() {
+
+        if (beaconManager == null) {
+            beaconManager = BeaconManagerBuilder.build(this);
+            beaconManager.setForegroundScanPeriod(getIntent().getIntExtra(KEY_PERIOD, 200));
+            beaconManager.bind(this);
+        }
+
+    }
 }
+

@@ -6,7 +6,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -14,18 +14,15 @@
     app:flexDirection="row"
     app:flexWrap="nowrap" tools:context="cx.mb.monitor.activity.MainActivity">
 
-    <EditText
-        android:id="@+id/main_edit_uuid"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="666a2d68-632d-636f-6e63-696572676531"/>
-    <Button
-        android:id="@+id/main_btn_start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="SCAN"/>
-    <Button
-        android:id="@+id/main_btn_clear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="CLEAR"/>
+    <fragment android:id="@+id/fragment_list"
+              class="cx.mb.monitor.fragment.BeaconListFragment"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1" tools:layout="@layout/fragment_beacon_list"/>
+
+    <fragment android:id="@+id/fragment_graph"
+              class="cx.mb.monitor.fragment.BeaconGraphFragment"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="2" tools:layout="@layout/fragment_beacong_graph"/>
 </LinearLayout>
