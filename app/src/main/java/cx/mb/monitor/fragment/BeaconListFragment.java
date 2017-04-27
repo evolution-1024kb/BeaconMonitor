@@ -15,8 +15,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cx.mb.monitor.R;
-import cx.mb.monitor.adapter.BeaconHistoryAdapter;
+import cx.mb.monitor.adapter.BeaconAdapter;
 import cx.mb.monitor.realm.BeaconHistory;
+import cx.mb.monitor.realm.BeaconItem;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -76,8 +77,8 @@ public class BeaconListFragment extends Fragment {
         realm = Realm.getDefaultInstance();
 
         // initialize ListView
-        final RealmResults<BeaconHistory> beacons = realm.where(BeaconHistory.class).findAllSorted("detectAt", Sort.DESCENDING);
-        final BeaconHistoryAdapter adapter = new BeaconHistoryAdapter(getActivity(), beacons);
+        final RealmResults<BeaconItem> beacons = realm.where(BeaconItem.class).findAll();
+        final BeaconAdapter adapter = new BeaconAdapter(getActivity(), beacons);
         this.listBeacons.setAdapter(adapter);
 
         return view;
@@ -99,13 +100,13 @@ public class BeaconListFragment extends Fragment {
 
         editUuid.setText("");
 
-        final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class).findAllSorted("detectAt", Sort.DESCENDING);
-        final BeaconHistoryAdapter adapter = new BeaconHistoryAdapter(getActivity(), results);
+        final RealmResults<BeaconItem> results = realm.where(BeaconItem.class).findAll();
+        final BeaconAdapter adapter = new BeaconAdapter(getActivity(), results);
         this.listBeacons.setAdapter(adapter);
     }
 
     /**
-     * Filter button clisk.
+     * Filter button click.
      */
     @SuppressWarnings("unused")
     @OnClick(R.id.beacon_list_button_filter)
@@ -117,11 +118,11 @@ public class BeaconListFragment extends Fragment {
             return;
         }
 
-        final RealmResults<BeaconHistory> results = realm
-                .where(BeaconHistory.class)
+        final RealmResults<BeaconItem> results = realm
+                .where(BeaconItem.class)
                 .contains("uuid", uuid)
                 .findAllSorted("detectAt", Sort.DESCENDING);
-        final BeaconHistoryAdapter adapter = new BeaconHistoryAdapter(getActivity(), results);
+        final BeaconAdapter adapter = new BeaconAdapter(getActivity(), results);
         this.listBeacons.setAdapter(adapter);
     }
 }

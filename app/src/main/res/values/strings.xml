@@ -12,4 +12,5 @@
     <string name="button_filter">filter</string>
     <string name="button_clear">clear</string>
     <string name="error_uuid_is_empty">UUID is empty.</string>
+    <string name="major_minor_format">MAJOR:%1$d / MINOR:%2$d</string>
 </resources>
