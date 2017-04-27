@@ -10,40 +10,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MainActivity用サービスクラス
+ * A service of MainActivity.
  * Created by toshiaki on 2017/04/21.
  */
 
 public class MainService {
 
     /**
-     * Bluetooth利用許可コード
-     */
-    public static final int REQUEST_ENABLE_BLUETOOTH = 100;
-
-    /**
-     * パーミッションリクエストコード
+     * Permission request code.
      */
     public static final int REQUEST_PERMISSIONS = 200;
-
     /**
-     * 呼び元アクティビティ
+     * Bluetooth enable request code.
+     */
+    private static final int REQUEST_ENABLE_BLUETOOTH = 100;
+    /**
+     * Owner activity.
      */
     private final Activity owner;
 
     /**
-     * コンストラクタ
+     * Constructor.
      *
-     * @param activity 呼び元
+     * @param activity Owner Activity.
      */
     public MainService(Activity activity) {
         this.owner = activity;
     }
 
     /**
-     * Bluetoothが使えるか
+     * Is bluetooth enabled?
      *
-     * @return true:利用可 / false:利用不可
+     * @return true:Yes / false:No
      */
     public boolean isBluetoothEnabled() {
 
@@ -55,7 +53,7 @@ public class MainService {
     }
 
     /**
-     * Bluetoothの利用要求
+     * Bluetooth enable request.
      */
     public void requestBluetooth() {
         Intent btOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -63,9 +61,9 @@ public class MainService {
     }
 
     /**
-     * 不足しているパーミッションを取得する
+     * Find lacked permissions.
      *
-     * @return 不足しているパーミッションの一覧
+     * @return list of lacked permission.
      */
     public List<String> getLackedPermissions() {
 
@@ -85,18 +83,18 @@ public class MainService {
     }
 
     /**
-     * パーミッション許可リクエスト
+     * Lacked permissions grant request.
      *
-     * @param lackedPermissions 不足しているパーミッションの一覧
+     * @param lackedPermissions list of lacked permissions.
      */
     public void requestPermissions(List<String> lackedPermissions) {
         owner.requestPermissions(lackedPermissions.toArray(new String[0]), REQUEST_PERMISSIONS);
     }
 
     /**
-     * 必要なパーミッションを持っているか
+     * Check required permissions.
      *
-     * @return true:持っている / false:持っていない
+     * @return true:Yes / false:No
      */
     public boolean hasAllPermissions() {
         return getLackedPermissions().isEmpty();

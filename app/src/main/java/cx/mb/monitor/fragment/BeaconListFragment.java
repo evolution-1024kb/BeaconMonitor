@@ -22,30 +22,30 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 /**
- * ビーコン一覧用フラグメント
+ * A fragment of beacon list.
  */
 public class BeaconListFragment extends Fragment {
 
     /**
-     * UUIDテキスト
+     * UUID edit text.
      */
     @BindView(R.id.beacon_list_text_uuid)
     EditText editUuid;
 
     /**
-     * クリアボタン
+     * Clear button.
      */
     @BindView(R.id.beacon_list_button_clear)
     Button buttonClear;
 
     /**
-     * フィルタボタン
+     * Filter button.
      */
     @BindView(R.id.beacon_list_button_filter)
     Button buttonFilter;
 
     /**
-     * ビーコン一覧
+     * list of beacons.
      */
     @BindView(R.id.beacon_list_list_beacons)
     ListView listBeacons;
@@ -56,12 +56,12 @@ public class BeaconListFragment extends Fragment {
     private Realm realm;
 
     /**
-     * アンバインダ
+     * ButterKnife un binder.
      */
     private Unbinder unBinder;
 
     /**
-     * コンストラクタ
+     * Constructor
      */
     public BeaconListFragment() {
         // Required empty public constructor
@@ -75,8 +75,8 @@ public class BeaconListFragment extends Fragment {
         unBinder = ButterKnife.bind(this, view);
         realm = Realm.getDefaultInstance();
 
-        // ListView初期化
-        final RealmResults<BeaconHistory> beacons = realm.where(BeaconHistory.class).findAllSorted("scanAt", Sort.DESCENDING);
+        // initialize ListView
+        final RealmResults<BeaconHistory> beacons = realm.where(BeaconHistory.class).findAllSorted("detectAt", Sort.DESCENDING);
         final BeaconHistoryAdapter adapter = new BeaconHistoryAdapter(getActivity(), beacons);
         this.listBeacons.setAdapter(adapter);
 
@@ -91,7 +91,7 @@ public class BeaconListFragment extends Fragment {
     }
 
     /**
-     * クリアボタンクリック
+     * Clear button click.
      */
     @SuppressWarnings("unused")
     @OnClick(R.id.beacon_list_button_clear)
@@ -99,11 +99,14 @@ public class BeaconListFragment extends Fragment {
 
         editUuid.setText("");
 
-        final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class).findAllSorted("scanAt", Sort.DESCENDING);
+        final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class).findAllSorted("detectAt", Sort.DESCENDING);
         final BeaconHistoryAdapter adapter = new BeaconHistoryAdapter(getActivity(), results);
         this.listBeacons.setAdapter(adapter);
     }
 
+    /**
+     * Filter button clisk.
+     */
     @SuppressWarnings("unused")
     @OnClick(R.id.beacon_list_button_filter)
     public void onFilterClick() {
@@ -117,7 +120,7 @@ public class BeaconListFragment extends Fragment {
         final RealmResults<BeaconHistory> results = realm
                 .where(BeaconHistory.class)
                 .contains("uuid", uuid)
-                .findAllSorted("scanAt", Sort.DESCENDING);
+                .findAllSorted("detectAt", Sort.DESCENDING);
         final BeaconHistoryAdapter adapter = new BeaconHistoryAdapter(getActivity(), results);
         this.listBeacons.setAdapter(adapter);
     }

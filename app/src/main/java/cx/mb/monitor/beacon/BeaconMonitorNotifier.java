@@ -9,22 +9,22 @@ import org.altbeacon.beacon.Region;
 import trikita.log.Log;
 
 /**
- * ビーコン検出通知クラス
+ * A Monitor of beacon detection.
  * Created by toshiaki on 2017/01/29.
  */
 public class BeaconMonitorNotifier implements MonitorNotifier {
 
     /**
-     * ビーコンマネージャ
+     * Beacon Manager.
      */
     private final BeaconManager beaconManager;
 
     /**
-     * コンストラクタ
-     * @param beaconManager ビーコンマネージャ
+     * Constructor.
+     * @param manager BeaconManager.
      */
-    public BeaconMonitorNotifier(BeaconManager beaconManager) {
-       this.beaconManager = beaconManager;
+    public BeaconMonitorNotifier(BeaconManager manager) {
+       this.beaconManager = manager;
     }
 
     @Override

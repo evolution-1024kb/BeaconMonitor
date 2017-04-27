@@ -5,19 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * ビーコンの状態を表すクラス
+ * Status of beacon.
  * Created by toshiaki on 2017/04/25.
  */
 @Setter
 @Getter
 public class BeaconStatus extends RealmObject {
     /**
-     * ビーコンへのバックリンク
+     * Back link.
      */
     private BeaconItem owner;
 
     /**
-     * 検出しているかどうか
+     * detection.
      */
     private boolean detection;
 }

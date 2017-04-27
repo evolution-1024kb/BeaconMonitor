@@ -10,7 +10,7 @@ import cx.mb.monitor.BuildConfig;
 import io.realm.Realm;
 
 /**
- * アプリケーションクラス
+ * Custom application class.
  * Created by toshiaki on 2017/01/22.
  */
 

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 検出したビーコン一件を表すクラス
+ * Beacon
  * Created by toshiaki on 2017/01/22.
  */
 @Getter
@@ -16,34 +16,34 @@ import lombok.Setter;
 public class BeaconItem extends RealmObject {
 
     /**
-     * PK(uuid_major_minor)
+     * Primary key(uuid_major_minor).
      */
     @PrimaryKey
     private String id;
 
     /**
-     * Proximity UUID
+     * Proximity UUID.
      */
     @Required
     private String uuid;
 
     /**
-     * Major
+     * Major.
      */
     private int major;
 
     /**
-     * Minor
+     * Minor.
      */
     private int minor;
 
     /**
-     * ビーコンの状態を表す
+     * Status of beacon.
      */
     private BeaconStatus status;
 
     /**
-     * 検出履歴一覧
+     * Histories.
      */
     private RealmList<BeaconHistory> histories;
 }

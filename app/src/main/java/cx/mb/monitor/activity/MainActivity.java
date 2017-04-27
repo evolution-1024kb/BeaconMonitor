@@ -23,24 +23,12 @@ import cx.mb.monitor.service.MainService;
 import trikita.log.Log;
 
 /**
- * メインアクティビティ
+ * A Main activity.
  */
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     private static final String KEY_UUID = "UUID";
     private static final String KEY_PERIOD = "PERIOD";
-
-//    /**
-//     * 一覧用フラグメント
-//     */
-//    @BindView(R.id.fragment_list)
-//    Fragment fragmentList;
-//
-//    /**
-//     * グラフ用フラグメント
-//     */
-//    @BindView(R.id.fragment_graph)
-//    Fragment fragmentGraph;
 
     /**
      * Beacon Manager
@@ -48,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private BeaconManager beaconManager = null;
 
     /**
-     * 画面用サービス
+     * Service of this activity.
      */
     private MainService service;
     private Region region;
@@ -62,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         service = new MainService(this);
 
-        // Bluetooth自体のチェック
+        // Check bluetooth enabled.
         if (!service.isBluetoothEnabled()) {
             service.requestBluetooth();
         } else {
@@ -128,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
     }
 
-    /**
-     * ビーコンマネージャへの接続
+   /**
+     * Connect to beacon manager.
      */
     private void bindBeaconManager() {
 

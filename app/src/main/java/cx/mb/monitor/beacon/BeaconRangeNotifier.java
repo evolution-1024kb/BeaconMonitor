@@ -17,7 +17,7 @@ import io.realm.Realm;
 import trikita.log.Log;
 
 /**
- * ビーコン情報通知クラス
+ * A Notifier of beacon detection.
  * Created by toshiaki on 2017/01/29.
  */
 public class BeaconRangeNotifier implements RangeNotifier {
@@ -57,7 +57,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         }
 
                         final BeaconHistory history = realm.createObject(BeaconHistory.class);
-                        history.setScanAt(DateUtils.truncate(new Date(), Calendar.SECOND));
+                        history.setDetectAt(DateUtils.truncate(new Date(), Calendar.SECOND));
                         history.setRssi(rssi);
                         history.setDistance(distance);
                         history.setTxPower(txPower);
