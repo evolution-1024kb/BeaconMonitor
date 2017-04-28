@@ -4,7 +4,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import org.altbeacon.beacon.BeaconConsumer;
@@ -13,7 +12,6 @@ import org.altbeacon.beacon.Region;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import cx.mb.monitor.R;
 import cx.mb.monitor.beacon.BeaconManagerBuilder;

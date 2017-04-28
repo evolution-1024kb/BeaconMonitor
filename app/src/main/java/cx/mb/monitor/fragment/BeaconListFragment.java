@@ -10,17 +10,21 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 import butterknife.Unbinder;
 import cx.mb.monitor.R;
 import cx.mb.monitor.adapter.BeaconAdapter;
-import cx.mb.monitor.realm.BeaconHistory;
+import cx.mb.monitor.event.BeaconSelectEvent;
 import cx.mb.monitor.realm.BeaconItem;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import trikita.log.Log;
 
 /**
  * A fragment of beacon list.
@@ -89,6 +93,25 @@ public class BeaconListFragment extends Fragment {
         super.onDestroyView();
         realm.close();
         unBinder.unbind();
+    }
+
+    /**
+     * Beacon list click.
+     */
+    @SuppressWarnings("unused")
+    @OnItemClick(R.id.beacon_list_list_beacons)
+    public void onBeaconListItemClick(int position) {
+
+        final BeaconItem item = (BeaconItem) listBeacons.getAdapter().getItem(position);
+        Log.d("UUID:%s, MAJOR:%d, MINOR:%d", item.getUuid(), item.getMajor(), item.getMinor());
+
+        if (EventBus.getDefault().hasSubscriberForEvent(BeaconSelectEvent.class)){
+            final BeaconSelectEvent event = new BeaconSelectEvent();
+            event.setUuid(item.getUuid());
+            event.setMajor(item.getMajor());
+            event.setMinor(item.getMinor());
+            EventBus.getDefault().post(event);
+        }
     }
 
     /**

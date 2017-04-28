@@ -21,10 +21,6 @@ import io.realm.RealmBaseAdapter;
 public class BeaconAdapter extends RealmBaseAdapter<BeaconItem> implements ListAdapter {
 
     /**
-     * String format of major and minor.
-     */
-    private final String major_minor_format;
-    /**
      * context.
      */
     private Context context;
@@ -37,7 +33,7 @@ public class BeaconAdapter extends RealmBaseAdapter<BeaconItem> implements ListA
      */
     public BeaconAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<BeaconItem> data) {
         super(data);
-        major_minor_format = context.getString(R.string.major_minor_format);
+        this.context = context;
     }
 
     @Override
@@ -57,8 +53,10 @@ public class BeaconAdapter extends RealmBaseAdapter<BeaconItem> implements ListA
 
         assert adapterData != null;
         final BeaconItem beacon = adapterData.get(position);
+        final String major_minor_format = context.getString(R.string.major_minor_format, beacon.getMajor(), beacon.getMinor());
+
         viewHolder.uuid.setText(beacon.getUuid());
-        viewHolder.major.setText(String.format(major_minor_format, beacon.getMajor(), beacon.getMinor()));
+        viewHolder.major.setText(major_minor_format);
 
         return view;
     }
