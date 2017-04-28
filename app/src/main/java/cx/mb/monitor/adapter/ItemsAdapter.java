@@ -1,9 +1,8 @@
-package cx.mb.mnavi.adapter;
+package cx.mb.monitor.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,8 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import cx.mb.mnavi.R;
-import cx.mb.mnavi.realm.BeaconHistory;
-import cx.mb.mnavi.realm.BeaconItem;
+import cx.mb.monitor.R;
+import cx.mb.monitor.realm.BeaconItem;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 
@@ -22,7 +20,7 @@ import io.realm.RealmBaseAdapter;
  * 一覧用アダプタ
  * Created by toshiaki on 2017/01/29.
  */
-public class BeaconHistoryAdapter extends RealmBaseAdapter<BeaconHistory> implements ListAdapter {
+public class ItemsAdapter extends RealmBaseAdapter<BeaconItem> implements ListAdapter {
 
     /**
      * ViewHolder
@@ -37,7 +35,7 @@ public class BeaconHistoryAdapter extends RealmBaseAdapter<BeaconHistory> implem
      * @param context コンテキスト
      * @param data    データ
      */
-    public BeaconHistoryAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<BeaconHistory> data) {
+    public ItemsAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<BeaconItem> data) {
         super(data);
     }
 
@@ -56,10 +54,8 @@ public class BeaconHistoryAdapter extends RealmBaseAdapter<BeaconHistory> implem
         }
 
         assert adapterData != null;
-        final BeaconHistory beacon = adapterData.get(position);
-
-        final String date = DateFormat.format("kk:mm:ss", beacon.getScanAt()).toString();
-        final String v = String.format(Locale.US, "UUID:%s, ScanAt:%s - 距離:%f", beacon.getOwner().getUuid(), date, beacon.getDistance());
+        final BeaconItem beacon = adapterData.get(position);
+        final String v = String.format(Locale.US, "UUID: %s", beacon.getUuid());
         viewHolder.uuid.setText(v);
 
         return convertView;

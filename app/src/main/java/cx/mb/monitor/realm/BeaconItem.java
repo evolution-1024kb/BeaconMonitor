@@ -1,4 +1,4 @@
-package cx.mb.mnavi.realm;
+package cx.mb.monitor.realm;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Beacon.
+ * Beacon
  * Created by toshiaki on 2017/01/22.
  */
 @Getter
@@ -16,29 +16,34 @@ import lombok.Setter;
 public class BeaconItem extends RealmObject {
 
     /**
-     * PK(uuid_major_minor)
+     * Primary key(uuid_major_minor).
      */
     @PrimaryKey
     private String id;
 
     /**
-     * Proximity UUID
+     * Proximity UUID.
      */
     @Required
     private String uuid;
 
     /**
-     * Major
+     * Major.
      */
     private int major;
 
     /**
-     * Minor
+     * Minor.
      */
     private int minor;
 
     /**
-     * 検出履歴一覧
+     * Status of beacon.
+     */
+    private BeaconStatus status;
+
+    /**
+     * Histories.
      */
     private RealmList<BeaconHistory> histories;
 }

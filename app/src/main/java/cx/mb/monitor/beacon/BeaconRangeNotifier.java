@@ -1,4 +1,4 @@
-package cx.mb.mnavi.beacon;
+package cx.mb.monitor.beacon;
 
 
 import org.altbeacon.beacon.Beacon;
@@ -11,13 +11,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
-import cx.mb.mnavi.realm.BeaconHistory;
-import cx.mb.mnavi.realm.BeaconItem;
+import cx.mb.monitor.realm.BeaconHistory;
+import cx.mb.monitor.realm.BeaconItem;
 import io.realm.Realm;
 import trikita.log.Log;
 
 /**
- * ビーコン情報通知クラス
+ * A Notifier of beacon detection.
  * Created by toshiaki on 2017/01/29.
  */
 public class BeaconRangeNotifier implements RangeNotifier {
@@ -57,7 +57,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         }
 
                         final BeaconHistory history = realm.createObject(BeaconHistory.class);
-                        history.setScanAt(DateUtils.truncate(new Date(), Calendar.SECOND));
+                        history.setDetectAt(DateUtils.truncate(new Date(), Calendar.SECOND));
                         history.setRssi(rssi);
                         history.setDistance(distance);
                         history.setTxPower(txPower);

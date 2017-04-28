@@ -1,22 +1,23 @@
-package cx.mb.mnavi.beacon;
+package cx.mb.monitor.beacon;
 
 import android.content.Context;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 
-import cx.mb.mnavi.R;
+import cx.mb.monitor.R;
 
 /**
+ * A Utility class of Beacon Manager.
  * ビーコンマネージャの作成ユーティリティ
  * Created by toshiaki on 2017/01/29.
  */
 public class BeaconManagerBuilder {
 
     /**
-     * ビーコンマネージャのインスタンスを取得
+     * Build instance.
      *
-     * @return ビーコンマネージャ
+     * @return BeaconManager.
      */
     public static BeaconManager build(Context context) {
 

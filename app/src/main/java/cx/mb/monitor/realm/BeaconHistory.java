@@ -1,23 +1,22 @@
-package cx.mb.mnavi.realm;
+package cx.mb.monitor.realm;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Required;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * ビーコン検出履歴
+ * Beacon detection history.
  * Created by toshiaki on 2017/04/20.
  */
 @Getter
 @Setter
 public class BeaconHistory extends RealmObject {
     /**
-     * 検出日時
+     * Date of detection.
      */
-    private Date scanAt;
+    private Date detectAt;
 
     /**
      * RSSI
@@ -25,7 +24,7 @@ public class BeaconHistory extends RealmObject {
     private int rssi;
 
     /**
-     * おおよその距離
+     * distance
      */
     private double distance;
 
@@ -35,7 +34,7 @@ public class BeaconHistory extends RealmObject {
     private int txPower;
 
     /**
-     * 親要素へのバックリンク
+     * Back link to Beacon
      */
     private BeaconItem owner;
 }

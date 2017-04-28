@@ -1,4 +1,4 @@
-package cx.mb.mnavi.application;
+package cx.mb.monitor.application;
 
 import android.app.Application;
 
@@ -6,15 +6,15 @@ import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
-import cx.mb.mnavi.BuildConfig;
+import cx.mb.monitor.BuildConfig;
 import io.realm.Realm;
 
 /**
- * アプリケーションクラス
+ * Custom application class.
  * Created by toshiaki on 2017/01/22.
  */
 
-public class NaviApplication extends Application {
+public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
