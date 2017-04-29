@@ -1,4 +1,4 @@
-package cx.mb.monitor.activity;
+package cx.mb.beaconmonitor.activity;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,11 +13,11 @@ import org.altbeacon.beacon.Region;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import cx.mb.monitor.R;
-import cx.mb.monitor.beacon.BeaconManagerBuilder;
-import cx.mb.monitor.beacon.BeaconMonitorNotifier;
-import cx.mb.monitor.beacon.BeaconRangeNotifier;
-import cx.mb.monitor.service.MainService;
+import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.beacon.BeaconManagerBuilder;
+import cx.mb.beaconmonitor.beacon.BeaconMonitorNotifier;
+import cx.mb.beaconmonitor.beacon.BeaconRangeNotifier;
+import cx.mb.beaconmonitor.service.MainService;
 import trikita.log.Log;
 
 /**

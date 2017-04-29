@@ -1,4 +1,4 @@
-package cx.mb.monitor.fragment;
+package cx.mb.beaconmonitor.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -17,10 +17,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.Unbinder;
-import cx.mb.monitor.R;
-import cx.mb.monitor.adapter.BeaconAdapter;
-import cx.mb.monitor.event.BeaconSelectEvent;
-import cx.mb.monitor.realm.BeaconItem;
+import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.adapter.BeaconAdapter;
+import cx.mb.beaconmonitor.event.BeaconSelectEvent;
+import cx.mb.beaconmonitor.realm.BeaconItem;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;

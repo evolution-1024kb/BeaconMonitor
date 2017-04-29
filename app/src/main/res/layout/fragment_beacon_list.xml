@@ -7,7 +7,7 @@
               android:paddingEnd="8dp"
               android:paddingStart="8dp"
               android:paddingTop="8dp"
-              tools:context="cx.mb.monitor.fragment.BeaconListFragment">
+              tools:context="cx.mb.beaconmonitor.fragment.BeaconListFragment">
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal">

@@ -1,4 +1,4 @@
-package cx.mb.monitor.beacon;
+package cx.mb.beaconmonitor.beacon;
 
 
 import org.altbeacon.beacon.Beacon;
@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
-import cx.mb.monitor.realm.BeaconHistory;
-import cx.mb.monitor.realm.BeaconItem;
+import cx.mb.beaconmonitor.realm.BeaconHistory;
+import cx.mb.beaconmonitor.realm.BeaconItem;
 import io.realm.Realm;
 import trikita.log.Log;
 

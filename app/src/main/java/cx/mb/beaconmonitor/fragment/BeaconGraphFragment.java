@@ -1,4 +1,4 @@
-package cx.mb.monitor.fragment;
+package cx.mb.beaconmonitor.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,8 +10,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import cx.mb.monitor.R;
-import cx.mb.monitor.event.BeaconSelectEvent;
+import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.event.BeaconSelectEvent;
 import trikita.log.Log;
 
 /**
@@ -42,7 +42,7 @@ public class BeaconGraphFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_beacong_graph, container, false);
+        return inflater.inflate(R.layout.fragment_beacon_graph, container, false);
     }
 
     @Override
