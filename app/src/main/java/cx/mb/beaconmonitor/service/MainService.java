@@ -1,4 +1,4 @@
-package cx.mb.monitor.service;
+package cx.mb.beaconmonitor.service;
 
 import android.Manifest;
 import android.app.Activity;

@@ -1,4 +1,4 @@
-package cx.mb.monitor.adapter;
+package cx.mb.beaconmonitor.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import cx.mb.monitor.R;
-import cx.mb.monitor.realm.BeaconItem;
+import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.realm.BeaconItem;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 

@@ -11,7 +11,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "cx.mb.mnavi"
+        applicationId "cx.mb.beaconmonitor"
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
@@ -28,25 +28,27 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'org.projectlombok:lombok:1.16.12'
-    compile 'co.trikita:log:1.1.5'
-    compile 'io.realm:android-adapters:2.0.0'
-    compile 'org.altbeacon:android-beacon-library:2.9.2'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.facebook.stetho:stetho:1.4.1'
     compile 'com.uphyca:stetho_realm:2.0.0'
+    compile 'org.projectlombok:lombok:1.16.12'
     compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.google.android:flexbox:0.2.5'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.hynnet:commons-lang3:3.4'
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'co.trikita:log:1.1.5'
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    compile 'io.realm:android-adapters:2.0.0'
+    compile 'org.altbeacon:android-beacon-library:2.9.2'
+    compile 'com.google.android:flexbox:0.2.5'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.hynnet:commons-lang3:3.4'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
 }

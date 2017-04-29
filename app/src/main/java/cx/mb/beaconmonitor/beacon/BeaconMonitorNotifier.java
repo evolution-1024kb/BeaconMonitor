@@ -1,4 +1,4 @@
-package cx.mb.monitor.beacon;
+package cx.mb.beaconmonitor.beacon;
 
 import android.os.RemoteException;
 

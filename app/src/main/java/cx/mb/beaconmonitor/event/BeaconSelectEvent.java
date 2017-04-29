@@ -1,4 +1,4 @@
-package cx.mb.monitor.event;
+package cx.mb.beaconmonitor.event;
 
 import lombok.Getter;
 import lombok.Setter;

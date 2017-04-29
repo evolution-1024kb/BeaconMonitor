@@ -1,4 +1,4 @@
-package cx.mb.monitor;
+package cx.mb.beaconmonitor;
 
 import org.junit.Test;
 

@@ -1,11 +1,11 @@
-package cx.mb.monitor.beacon;
+package cx.mb.beaconmonitor.beacon;
 
 import android.content.Context;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 
-import cx.mb.monitor.R;
+import cx.mb.beaconmonitor.R;
 
 /**
  * A Utility class of Beacon Manager.

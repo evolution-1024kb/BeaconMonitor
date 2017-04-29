@@ -13,17 +13,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:flexDirection="row"
     android:baselineAligned="false"
-    app:flexWrap="nowrap" tools:context="cx.mb.monitor.activity.MainActivity">
+    app:flexWrap="nowrap" tools:context="cx.mb.beaconmonitor.activity.MainActivity">
 
     <fragment android:id="@+id/fragment_list"
-              class="cx.mb.monitor.fragment.BeaconListFragment"
+              class="cx.mb.beaconmonitor.fragment.BeaconListFragment"
               android:layout_width="0dp"
               android:layout_height="match_parent"
               android:layout_weight="1" tools:layout="@layout/fragment_beacon_list"/>
 
     <fragment android:id="@+id/fragment_graph"
-              class="cx.mb.monitor.fragment.BeaconGraphFragment"
+              class="cx.mb.beaconmonitor.fragment.BeaconGraphFragment"
               android:layout_width="0dp"
               android:layout_height="match_parent"
-              android:layout_weight="2" tools:layout="@layout/fragment_beacong_graph"/>
+              android:layout_weight="2" tools:layout="@layout/fragment_beacon_graph"/>
 </LinearLayout>
