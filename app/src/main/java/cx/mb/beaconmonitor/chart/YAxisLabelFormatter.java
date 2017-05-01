@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor.formatter;
+package cx.mb.beaconmonitor.chart;
 
 import android.text.format.DateFormat;
 

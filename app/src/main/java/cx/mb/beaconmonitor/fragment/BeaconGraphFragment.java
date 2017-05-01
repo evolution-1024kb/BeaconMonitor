@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -28,8 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.chart.CircleOnlyRenderer;
 import cx.mb.beaconmonitor.event.BeaconSelectEvent;
-import cx.mb.beaconmonitor.formatter.YAxisLabelFormatter;
+import cx.mb.beaconmonitor.chart.YAxisLabelFormatter;
 import cx.mb.beaconmonitor.realm.BeaconHistory;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -84,6 +87,7 @@ public class BeaconGraphFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        refreshHandler.removeCallbacksAndMessages(null);
         realm.close();
         unBinder.unbind();
     }
@@ -129,6 +133,9 @@ public class BeaconGraphFragment extends Fragment {
     }
 
     private void initChart() {
+
+        chart.setNoDataText(getString(R.string.beacon_list_no_data));
+
 
 //        YourData[] dataObjects = new YourData[10];
 //        dataObjects[0] = new YourData(1, 1);
@@ -178,17 +185,26 @@ public class BeaconGraphFragment extends Fragment {
 //            Log.d("TIME:", data.getDetectAt(), "RSSI:", data.getRssi());
 
             dates.add(data.getDetectAt());
-            entries.add(new Entry(x, data.getRssi()));
+            if (x % 2 == 0) {
+                entries.add(new Entry(x, data.getRssi()));
+            }
             x++;
         }
 
         final XAxis xAxis = chart.getXAxis();
-        xAxis.setTextColor(Color.RED);
         xAxis.setValueFormatter(new YAxisLabelFormatter(dates.toArray(new Date[]{})));
 
+        final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
+        final ChartAnimator animator = chart.getAnimator();
+
         final LineDataSet dataSet = new LineDataSet(entries, "RSSI:");
+        dataSet.setCircleColor(Color.RED);
         final LineData lineData = new LineData(dataSet);
+
+        lineData.setDrawValues(false);
+
         chart.setData(lineData);
+        chart.setRenderer(new CircleOnlyRenderer(chart, animator, viewPortHandler));
         chart.notifyDataSetChanged();
         chart.invalidate();
     }
