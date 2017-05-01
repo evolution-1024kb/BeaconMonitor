@@ -85,6 +85,9 @@ public class BeaconListFragment extends Fragment {
         final BeaconAdapter adapter = new BeaconAdapter(getActivity(), beacons);
         this.listBeacons.setAdapter(adapter);
 
+        // reset uuid
+        editUuid.setText("");
+
         return view;
     }
 
