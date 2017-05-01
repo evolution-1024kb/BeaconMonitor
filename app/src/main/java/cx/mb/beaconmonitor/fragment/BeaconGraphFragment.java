@@ -2,6 +2,7 @@ package cx.mb.beaconmonitor.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -52,20 +55,14 @@ public class BeaconGraphFragment extends Fragment {
      * Realm instance.
      */
     private Realm realm;
-//    /**
-//     * Selected uuid.
-//     */
-//    private String uuid;
-//
-//    /**
-//     * Selected major.
-//     */
-//    private int major;
-//
-//    /**
-//     * Selected minor.
-//     */
-//    private int minor;
+
+    /**
+     * Graph refresh handler.
+     */
+    private Handler refreshHandler = null;
+    private String uuid;
+    private int major;
+    private int minor;
 
     public BeaconGraphFragment() {
         // Required empty public constructor
@@ -80,6 +77,7 @@ public class BeaconGraphFragment extends Fragment {
         realm = Realm.getDefaultInstance();
 
         initChart();
+        refreshHandler = new Handler();
         return view;
     }
 
@@ -114,11 +112,20 @@ public class BeaconGraphFragment extends Fragment {
     public void handleBeaconSelect(BeaconSelectEvent event) {
         Log.d("UUID:%s, MAJOR:%d, MINOR:%d", event.getUuid(), event.getMajor(), event.getMinor());
 
-        final String uuid = event.getUuid();
-        final int major = event.getMajor();
-        final int minor = event.getMinor();
+        uuid = event.getUuid();
+        major = event.getMajor();
+        minor = event.getMinor();
 
         createSampleChart(uuid, major, minor);
+        final int delay = getResources().getInteger(R.integer.beacon_list_refresh_interval);
+
+        refreshHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                createSampleChart(uuid, major, minor);
+                refreshHandler.postDelayed(this, delay);
+            }
+        }, delay);
     }
 
     private void initChart() {
@@ -148,18 +155,27 @@ public class BeaconGraphFragment extends Fragment {
 
     private void createSampleChart(final String uuid, final int major, final int minor) {
 
+        final Date now = DateUtils.truncate(new Date(), Calendar.MILLISECOND);
+        final int timeSpan = getResources().getInteger(R.integer.beacon_list_time_span_minutes);
+
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.MINUTE, -1 * timeSpan);
+        final Date threshold = DateUtils.truncate(calendar.getTime(), Calendar.MILLISECOND);
+
+        Log.d("NOW:", now, "THRESHOLD:", threshold);
         final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class)
                 .equalTo("owner.uuid", uuid)
                 .equalTo("owner.major", major)
                 .equalTo("owner.minor", minor)
                 .findAllSorted("detectAt", Sort.ASCENDING);
 
-        List<Entry> entries = new ArrayList<Entry>();
+        List<Entry> entries = new ArrayList<>();
 
         final ArrayList<Date> dates = new ArrayList<>();
         int x = 0;
         for (BeaconHistory data : results) {
-            Log.d("TIME:", data.getDetectAt(), "RSSI:", data.getRssi());
+//            Log.d("TIME:", data.getDetectAt(), "RSSI:", data.getRssi());
 
             dates.add(data.getDetectAt());
             entries.add(new Entry(x, data.getRssi()));
