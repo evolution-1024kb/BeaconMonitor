@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -135,40 +137,22 @@ public class BeaconGraphFragment extends Fragment {
     private void initChart() {
 
         chart.setNoDataText(getString(R.string.beacon_list_no_data));
+    }
 
+    private Date createThreshold(Date now) {
 
-//        YourData[] dataObjects = new YourData[10];
-//        dataObjects[0] = new YourData(1, 1);
-//        dataObjects[1] = new YourData(2, 8);
-//        dataObjects[2] = new YourData(3, 2.6f);
-//        dataObjects[3] = new YourData(4, 4);
-//        dataObjects[4] = new YourData(5, 9);
-//        dataObjects[5] = new YourData(6, 10);
-//        dataObjects[6] = new YourData(7, -4);
-//        dataObjects[7] = new YourData(8, 0);
-//        dataObjects[8] = new YourData(9, 9);
-//        dataObjects[9] = new YourData(10, 10);
-//
-//        List<Entry> entries = new ArrayList<Entry>();
-//        for (YourData data : dataObjects) {
-//            entries.add(new Entry(data.getValueX(), data.getValueY()));
-//        }
-//
-//        final LineDataSet dataSet = new LineDataSet(entries, "Label");
-//        final LineData lineData = new LineData(dataSet);
-//        chart.setData(lineData);
-//        chart.invalidate();
+        final int timeSpan = getResources().getInteger(R.integer.beacon_list_time_span_minutes);
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.MINUTE, -1 * timeSpan);
+
+        return DateUtils.truncate(calendar.getTime(), Calendar.MILLISECOND);
     }
 
     private void createSampleChart(final String uuid, final int major, final int minor) {
 
         final Date now = DateUtils.truncate(new Date(), Calendar.MILLISECOND);
-        final int timeSpan = getResources().getInteger(R.integer.beacon_list_time_span_minutes);
-
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
-        calendar.add(Calendar.MINUTE, -1 * timeSpan);
-        final Date threshold = DateUtils.truncate(calendar.getTime(), Calendar.MILLISECOND);
+        final Date threshold = createThreshold(now);
 
         Log.d("NOW:", now, "THRESHOLD:", threshold);
         final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class)
@@ -177,31 +161,46 @@ public class BeaconGraphFragment extends Fragment {
                 .equalTo("owner.minor", minor)
                 .findAllSorted("detectAt", Sort.ASCENDING);
 
-        List<Entry> entries = new ArrayList<>();
+        List<Entry> rssiEntries = new ArrayList<>();
+        List<Entry> distanceEntries = new ArrayList<>();
 
         final ArrayList<Date> dates = new ArrayList<>();
         int x = 0;
         for (BeaconHistory data : results) {
-//            Log.d("TIME:", data.getDetectAt(), "RSSI:", data.getRssi());
-
             dates.add(data.getDetectAt());
-            if (x % 2 == 0) {
-                entries.add(new Entry(x, data.getRssi()));
-            }
+            rssiEntries.add(new Entry(x, data.getRssi()));
+            distanceEntries.add(new Entry(x, (float) data.getDistance()));
             x++;
         }
+
+
+        final LineDataSet rssiDataSet = new LineDataSet(rssiEntries, "RSSI:");
+        rssiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        final LineDataSet distanceLineDataSet = new LineDataSet(distanceEntries, "DISTANCE:");
+        distanceLineDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        distanceLineDataSet.setCircleColor(Color.RED);
+        distanceLineDataSet.setDrawCircleHole(false);
+        distanceLineDataSet.setColor(Color.RED);
+        final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
+        final ChartAnimator animator = chart.getAnimator();
 
         final XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(new YAxisLabelFormatter(dates.toArray(new Date[]{})));
 
-        final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
-        final ChartAnimator animator = chart.getAnimator();
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGranularityEnabled(true);
 
-        final LineDataSet dataSet = new LineDataSet(entries, "RSSI:");
-        dataSet.setCircleColor(Color.RED);
-        final LineData lineData = new LineData(dataSet);
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setTextColor(Color.RED);
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawZeroLine(false);
+        rightAxis.setGranularityEnabled(false);
 
-        lineData.setDrawValues(false);
+
+        final LineData lineData = new LineData(rssiDataSet, distanceLineDataSet);
 
         chart.setData(lineData);
         chart.setRenderer(new CircleOnlyRenderer(chart, animator, viewPortHandler));

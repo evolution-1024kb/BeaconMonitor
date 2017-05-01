@@ -16,5 +16,5 @@
     <string name="beacon_list_text_uuid_hint">Enter filter text.</string>
     <string name="beacon_list_no_data">データがありません</string>
     <integer name="beacon_list_refresh_interval" type="id">1000</integer>
-    <integer name="beacon_list_time_span_minutes">10</integer>
+    <integer name="beacon_list_time_span_minutes">5</integer>
 </resources>
