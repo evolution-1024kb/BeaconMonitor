@@ -8,6 +8,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import cx.mb.beaconmonitor.BuildConfig;
 import io.realm.Realm;
+import trikita.log.Log;
 
 /**
  * Custom application class.
@@ -20,6 +21,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Log.useFormat(true);
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this);
         }
