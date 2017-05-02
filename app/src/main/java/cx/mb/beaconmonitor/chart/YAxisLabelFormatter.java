@@ -1,4 +1,4 @@
-package cx.mb.beaconmonitor.formatter;
+package cx.mb.beaconmonitor.chart;
 
 import android.text.format.DateFormat;
 
@@ -34,7 +34,7 @@ public class YAxisLabelFormatter implements IAxisValueFormatter {
     public String getFormattedValue(float value, AxisBase axis) {
 
         final String time = DateFormat.format("kk:mm:ss", origin[(int) value]).toString();
-        Log.d("Time:%s", time);
+//        Log.d("Time:%s", time);
         return time;
     }
 }

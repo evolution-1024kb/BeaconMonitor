@@ -18,8 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cx.mb.beaconmonitor.activity.MainActivity"
-            android:screenOrientation="landscape">
+            android:name="cx.mb.beaconmonitor.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -2,6 +2,7 @@ package cx.mb.beaconmonitor.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,28 +10,26 @@ import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.chart.YAxisLabelFormatter;
 import cx.mb.beaconmonitor.event.BeaconSelectEvent;
-import cx.mb.beaconmonitor.formatter.YAxisLabelFormatter;
-import cx.mb.beaconmonitor.realm.BeaconHistory;
+import cx.mb.beaconmonitor.service.BeaconGraphService;
+import cx.mb.beaconmonitor.service.LineDataContainer;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
 import trikita.log.Log;
 
 /**
@@ -52,20 +51,31 @@ public class BeaconGraphFragment extends Fragment {
      * Realm instance.
      */
     private Realm realm;
-//    /**
-//     * Selected uuid.
-//     */
-//    private String uuid;
-//
-//    /**
-//     * Selected major.
-//     */
-//    private int major;
-//
-//    /**
-//     * Selected minor.
-//     */
-//    private int minor;
+
+    /**
+     * Graph refresh handler.
+     */
+    private Handler refreshHandler = null;
+
+    /**
+     * Service class.
+     */
+    private BeaconGraphService service;
+
+    /**
+     * Last selected uuid.
+     */
+    private String uuid;
+
+    /**
+     * Last selected major.
+     */
+    private int major;
+
+    /**
+     * Last selected minor.
+     */
+    private int minor;
 
     public BeaconGraphFragment() {
         // Required empty public constructor
@@ -80,12 +90,15 @@ public class BeaconGraphFragment extends Fragment {
         realm = Realm.getDefaultInstance();
 
         initChart();
+        refreshHandler = new Handler();
+        service = new BeaconGraphService(getActivity());
         return view;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        refreshHandler.removeCallbacksAndMessages(null);
         realm.close();
         unBinder.unbind();
     }
@@ -114,65 +127,62 @@ public class BeaconGraphFragment extends Fragment {
     public void handleBeaconSelect(BeaconSelectEvent event) {
         Log.d("UUID:%s, MAJOR:%d, MINOR:%d", event.getUuid(), event.getMajor(), event.getMinor());
 
-        final String uuid = event.getUuid();
-        final int major = event.getMajor();
-        final int minor = event.getMinor();
+        uuid = event.getUuid();
+        major = event.getMajor();
+        minor = event.getMinor();
 
-        createSampleChart(uuid, major, minor);
+        updateChart(uuid, major, minor);
+        final int delay = getResources().getInteger(R.integer.beacon_list_refresh_interval);
+
+        refreshHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateChart(uuid, major, minor);
+                refreshHandler.postDelayed(this, delay);
+            }
+        }, delay);
     }
 
+    /**
+     * Initialize chart.
+     */
     private void initChart() {
 
-//        YourData[] dataObjects = new YourData[10];
-//        dataObjects[0] = new YourData(1, 1);
-//        dataObjects[1] = new YourData(2, 8);
-//        dataObjects[2] = new YourData(3, 2.6f);
-//        dataObjects[3] = new YourData(4, 4);
-//        dataObjects[4] = new YourData(5, 9);
-//        dataObjects[5] = new YourData(6, 10);
-//        dataObjects[6] = new YourData(7, -4);
-//        dataObjects[7] = new YourData(8, 0);
-//        dataObjects[8] = new YourData(9, 9);
-//        dataObjects[9] = new YourData(10, 10);
-//
-//        List<Entry> entries = new ArrayList<Entry>();
-//        for (YourData data : dataObjects) {
-//            entries.add(new Entry(data.getValueX(), data.getValueY()));
-//        }
-//
-//        final LineDataSet dataSet = new LineDataSet(entries, "Label");
-//        final LineData lineData = new LineData(dataSet);
-//        chart.setData(lineData);
-//        chart.invalidate();
+        chart.setNoDataText(getString(R.string.beacon_list_no_data));
+
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        leftAxis.setTextColor(Color.BLUE);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawZeroLine(false);
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setTextColor(Color.RED);
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawZeroLine(false);
     }
 
-    private void createSampleChart(final String uuid, final int major, final int minor) {
+    /**
+     * Update chart data.
+     *
+     * @param uuid  uuid.
+     * @param major major.
+     * @param minor minor.
+     */
+    private void updateChart(final String uuid, final int major, final int minor) {
 
-        final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class)
-                .equalTo("owner.uuid", uuid)
-                .equalTo("owner.major", major)
-                .equalTo("owner.minor", minor)
-                .findAllSorted("detectAt", Sort.ASCENDING);
+        final Date now = DateUtils.truncate(new Date(), Calendar.MILLISECOND);
+        final Date threshold = service.getThreshold(now);
 
-        List<Entry> entries = new ArrayList<Entry>();
+        Log.d("NOW:", now, "THRESHOLD:", threshold);
 
-        final ArrayList<Date> dates = new ArrayList<>();
-        int x = 0;
-        for (BeaconHistory data : results) {
-            Log.d("TIME:", data.getDetectAt(), "RSSI:", data.getRssi());
-
-            dates.add(data.getDetectAt());
-            entries.add(new Entry(x, data.getRssi()));
-            x++;
-        }
+        final LineDataContainer container = service.createLineData(now, threshold, uuid, major, minor);
 
         final XAxis xAxis = chart.getXAxis();
-        xAxis.setTextColor(Color.RED);
-        xAxis.setValueFormatter(new YAxisLabelFormatter(dates.toArray(new Date[]{})));
+        xAxis.setValueFormatter(new YAxisLabelFormatter(container.getDates().toArray(new Date[]{})));
 
-        final LineDataSet dataSet = new LineDataSet(entries, "RSSI:");
-        final LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
+        chart.setDrawGridBackground(true);
+        chart.setData(container.getLineData());
         chart.notifyDataSetChanged();
         chart.invalidate();
     }
