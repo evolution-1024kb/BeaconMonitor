@@ -12,6 +12,8 @@ import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
@@ -149,6 +151,7 @@ public class BeaconGraphFragment extends Fragment {
     private void initChart() {
 
         chart.setNoDataText(getString(R.string.beacon_list_no_data));
+chart.setPinchZoom(false);
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
@@ -169,7 +172,7 @@ public class BeaconGraphFragment extends Fragment {
 
         Log.d("NOW:", now, "THRESHOLD:", threshold);
 
-        final LineDataContainer container = service.createLineData(uuid, major, minor);
+        final LineDataContainer container = service.createLineData(now, threshold, uuid, major, minor);
 
         final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
         final ChartAnimator animator = chart.getAnimator();

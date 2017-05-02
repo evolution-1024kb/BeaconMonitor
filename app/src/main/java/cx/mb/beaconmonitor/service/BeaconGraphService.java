@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import org.altbeacon.beacon.Beacon;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import cx.mb.beaconmonitor.realm.BeaconHistory;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import trikita.log.Log;
 
 /**
  * Service class for BeaconGraphFragment.
@@ -48,6 +50,7 @@ public class BeaconGraphService {
 
     /**
      * Get oldest datetime.
+     *
      * @param now Current datetime.
      * @return oldest datetime.
      */
@@ -64,34 +67,59 @@ public class BeaconGraphService {
     /**
      * Create line data.
      *
-     * @param uuid  UUID
-     * @param major MAJOR
-     * @param minor MINOR
+     * @param now       Current datetime.
+     * @param threshold oldest datetime.
+     * @param uuid      UUID
+     * @param major     MAJOR
+     * @param minor     MINOR
      * @return line data.
      */
-    public LineDataContainer createLineData(String uuid, int major, int minor) {
+    public LineDataContainer createLineData(Date now, Date threshold, String uuid, int major, int minor) {
 
         Realm realm = null;
         try {
+            final ArrayList<Date> dates = new ArrayList<>();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(threshold);
+
+            while (now.compareTo(cal.getTime()) > 0) {
+                final Date truncate = DateUtils.truncate(cal.getTime(), Calendar.SECOND);
+                dates.add(truncate);
+                cal.add(Calendar.SECOND, 1);
+            }
+
             realm = Realm.getDefaultInstance();
-            final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class)
-                    .equalTo("owner.uuid", uuid)
-                    .equalTo("owner.major", major)
-                    .equalTo("owner.minor", minor)
-                    .findAllSorted("detectAt", Sort.ASCENDING);
+//            final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class)
+//                    .equalTo("owner.uuid", uuid)
+//                    .equalTo("owner.major", major)
+//                    .equalTo("owner.minor", minor)
+//                    .greaterThanOrEqualTo("detectAt", threshold)
+//                    .findAllSorted("detectAt", Sort.ASCENDING);
 
             List<Entry> rssiEntries = new ArrayList<>();
             List<Entry> distanceEntries = new ArrayList<>();
 
-            final ArrayList<Date> dates = new ArrayList<>();
             int x = 0;
-            for (BeaconHistory data : results) {
-                dates.add(data.getDetectAt());
-                rssiEntries.add(new Entry(x, data.getRssi()));
-                distanceEntries.add(new Entry(x, (float) data.getDistance()));
+            for (Date date : dates) {
+                final BeaconHistory data = realm.where(BeaconHistory.class)
+                        .equalTo("owner.uuid", uuid)
+                        .equalTo("owner.major", major)
+                        .equalTo("owner.minor", minor)
+                        .equalTo("detectAt", date)
+                        .findFirst();
+                if (data != null) {
+
+                    rssiEntries.add(new Entry(x, data.getRssi()));
+                    distanceEntries.add(new Entry(x, (float) data.getDistance()));
+                }
                 x++;
             }
 
+            if (rssiEntries.size() == 0 || distanceEntries.size() == 0) {
+                rssiEntries.add(new Entry(0, 0));
+                distanceEntries.add(new Entry(0, 0));
+            }
 
             final LineDataSet rssiDataSet = new LineDataSet(rssiEntries, "RSSI:");
             rssiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
