@@ -151,7 +151,10 @@ public class BeaconGraphFragment extends Fragment {
     private void initChart() {
 
         chart.setNoDataText(getString(R.string.beacon_list_no_data));
-chart.setPinchZoom(false);
+//        chart.setScaleEnabled(false);
+//        chart.setVisibleXRangeMaximum(300f);
+//        chart.setVisibleXRangeMinimum(300f);
+//        chart.fitScreen();
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
@@ -177,9 +180,12 @@ chart.setPinchZoom(false);
         final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
         final ChartAnimator animator = chart.getAnimator();
 
-        final XAxis xAxis = chart.getXAxis();
-        xAxis.setValueFormatter(new YAxisLabelFormatter(container.getDates().toArray(new Date[]{})));
+//        final XAxis xAxis = chart.getXAxis();
+//        xAxis.setValueFormatter(new YAxisLabelFormatter(container.getDates().toArray(new Date[]{})));
+//        xAxis.setAvoidFirstLastClipping(true);
+//        xAxis.setGranularityEnabled(true);
 
+        chart.setDrawGridBackground(true);
         chart.setData(container.getLineData());
         chart.setRenderer(new CircleOnlyRenderer(chart, animator, viewPortHandler));
         chart.notifyDataSetChanged();
