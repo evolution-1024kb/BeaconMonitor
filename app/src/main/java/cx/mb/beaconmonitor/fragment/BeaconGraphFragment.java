@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -47,6 +48,9 @@ public class BeaconGraphFragment extends Fragment {
     @BindView(R.id.beacon_graph_chart)
     LineChart chart;
 
+    @BindView(R.id.beacon_graph_beacon_info)
+    TextView beaconInfo;
+
     /**
      * Realm instance.
      */
@@ -84,10 +88,12 @@ public class BeaconGraphFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         final View view = inflater.inflate(R.layout.fragment_beacon_graph, container, false);
         unBinder = ButterKnife.bind(this, view);
         realm = Realm.getDefaultInstance();
+
+        beaconInfo.setText("");
 
         initChart();
         refreshHandler = new Handler();
@@ -130,6 +136,9 @@ public class BeaconGraphFragment extends Fragment {
         uuid = event.getUuid();
         major = event.getMajor();
         minor = event.getMinor();
+
+        final String info = getString(R.string.beacon_graph_beacon_info, uuid, major, minor);
+        this.beaconInfo.setText(info);
 
         updateChart(uuid, major, minor);
         final int delay = getResources().getInteger(R.integer.beacon_list_refresh_interval);

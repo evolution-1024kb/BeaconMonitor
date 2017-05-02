@@ -15,6 +15,7 @@
     <string name="major_minor_format">MAJOR:%1$d / MINOR:%2$d</string>
     <string name="beacon_list_text_uuid_hint">Enter filter text.</string>
     <string name="beacon_list_no_data">データがありません</string>
+    <string name="beacon_graph_beacon_info">UUID: %1$s / MAJOR: %2$d / MINOR: %3$d</string>
     <integer name="beacon_list_refresh_interval" type="id">1000</integer>
     <integer name="beacon_list_time_span_minutes">2</integer>
 </resources>
