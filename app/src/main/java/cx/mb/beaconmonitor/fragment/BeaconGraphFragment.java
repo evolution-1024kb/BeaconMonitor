@@ -8,14 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -29,7 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cx.mb.beaconmonitor.R;
-import cx.mb.beaconmonitor.chart.CircleOnlyRenderer;
 import cx.mb.beaconmonitor.chart.YAxisLabelFormatter;
 import cx.mb.beaconmonitor.event.BeaconSelectEvent;
 import cx.mb.beaconmonitor.service.BeaconGraphService;
@@ -136,39 +131,45 @@ public class BeaconGraphFragment extends Fragment {
         major = event.getMajor();
         minor = event.getMinor();
 
-        createSampleChart(uuid, major, minor);
+        updateChart(uuid, major, minor);
         final int delay = getResources().getInteger(R.integer.beacon_list_refresh_interval);
 
         refreshHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                createSampleChart(uuid, major, minor);
+                updateChart(uuid, major, minor);
                 refreshHandler.postDelayed(this, delay);
             }
         }, delay);
     }
 
+    /**
+     * Initialize chart.
+     */
     private void initChart() {
 
         chart.setNoDataText(getString(R.string.beacon_list_no_data));
-//        chart.setScaleEnabled(false);
-//        chart.setVisibleXRangeMaximum(300f);
-//        chart.setVisibleXRangeMinimum(300f);
-//        chart.fitScreen();
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGranularityEnabled(true);
+        leftAxis.setTextColor(Color.BLUE);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawZeroLine(false);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setTextColor(Color.RED);
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawZeroLine(false);
-        rightAxis.setGranularityEnabled(false);
     }
 
-    private void createSampleChart(final String uuid, final int major, final int minor) {
+    /**
+     * Update chart data.
+     *
+     * @param uuid  uuid.
+     * @param major major.
+     * @param minor minor.
+     */
+    private void updateChart(final String uuid, final int major, final int minor) {
 
         final Date now = DateUtils.truncate(new Date(), Calendar.MILLISECOND);
         final Date threshold = service.getThreshold(now);
@@ -177,17 +178,11 @@ public class BeaconGraphFragment extends Fragment {
 
         final LineDataContainer container = service.createLineData(now, threshold, uuid, major, minor);
 
-        final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
-        final ChartAnimator animator = chart.getAnimator();
-
-//        final XAxis xAxis = chart.getXAxis();
-//        xAxis.setValueFormatter(new YAxisLabelFormatter(container.getDates().toArray(new Date[]{})));
-//        xAxis.setAvoidFirstLastClipping(true);
-//        xAxis.setGranularityEnabled(true);
+        final XAxis xAxis = chart.getXAxis();
+        xAxis.setValueFormatter(new YAxisLabelFormatter(container.getDates().toArray(new Date[]{})));
 
         chart.setDrawGridBackground(true);
         chart.setData(container.getLineData());
-        chart.setRenderer(new CircleOnlyRenderer(chart, animator, viewPortHandler));
         chart.notifyDataSetChanged();
         chart.invalidate();
     }

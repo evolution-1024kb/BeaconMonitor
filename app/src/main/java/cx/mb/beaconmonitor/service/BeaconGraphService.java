@@ -78,24 +78,17 @@ public class BeaconGraphService {
 
         Realm realm = null;
         try {
+            realm = Realm.getDefaultInstance();
+
             final ArrayList<Date> dates = new ArrayList<>();
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(threshold);
-
             while (now.compareTo(cal.getTime()) > 0) {
                 final Date truncate = DateUtils.truncate(cal.getTime(), Calendar.SECOND);
                 dates.add(truncate);
                 cal.add(Calendar.SECOND, 1);
             }
-
-            realm = Realm.getDefaultInstance();
-//            final RealmResults<BeaconHistory> results = realm.where(BeaconHistory.class)
-//                    .equalTo("owner.uuid", uuid)
-//                    .equalTo("owner.major", major)
-//                    .equalTo("owner.minor", minor)
-//                    .greaterThanOrEqualTo("detectAt", threshold)
-//                    .findAllSorted("detectAt", Sort.ASCENDING);
 
             List<Entry> rssiEntries = new ArrayList<>();
             List<Entry> distanceEntries = new ArrayList<>();
@@ -108,11 +101,12 @@ public class BeaconGraphService {
                         .equalTo("owner.minor", minor)
                         .equalTo("detectAt", date)
                         .findFirst();
-                if (data != null) {
 
-                    rssiEntries.add(new Entry(x, data.getRssi()));
-                    distanceEntries.add(new Entry(x, (float) data.getDistance()));
-                }
+                final float rssi = data != null ? data.getRssi() : Float.NaN;
+                final float distance = data != null ? (float) data.getDistance() : Float.NaN;
+
+                rssiEntries.add(new Entry(x, rssi));
+                distanceEntries.add(new Entry(x, distance));
                 x++;
             }
 
@@ -121,10 +115,13 @@ public class BeaconGraphService {
                 distanceEntries.add(new Entry(0, 0));
             }
 
-            final LineDataSet rssiDataSet = new LineDataSet(rssiEntries, "RSSI:");
+            final LineDataSet rssiDataSet = new LineDataSet(rssiEntries, "RSSI");
             rssiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+            rssiDataSet.setCircleColor(Color.BLUE);
+            rssiDataSet.setDrawCircleHole(false);
+            rssiDataSet.setColor(Color.BLUE);
 
-            final LineDataSet distanceLineDataSet = new LineDataSet(distanceEntries, "DISTANCE:");
+            final LineDataSet distanceLineDataSet = new LineDataSet(distanceEntries, "DISTANCE");
             distanceLineDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
             distanceLineDataSet.setCircleColor(Color.RED);
             distanceLineDataSet.setDrawCircleHole(false);
