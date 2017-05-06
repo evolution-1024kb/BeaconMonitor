@@ -41,7 +41,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                     }
 
                     for (Beacon col : collection) {
-                        final String uuid = col.getId1().toString().toUpperCase();
+                        final String uuid = col.getId1().toString().toUpperCase(Locale.ENGLISH);
                         final int major = col.getId2().toInt();
                         final int minor = col.getId3().toInt();
                         final int rssi = col.getRssi();
