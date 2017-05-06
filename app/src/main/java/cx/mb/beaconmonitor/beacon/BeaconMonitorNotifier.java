@@ -3,9 +3,14 @@ package cx.mb.beaconmonitor.beacon;
 import android.os.RemoteException;
 
 import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 
+import cx.mb.beaconmonitor.realm.BeaconStatus;
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import trikita.log.Log;
 
 /**
@@ -21,10 +26,11 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
 
     /**
      * Constructor.
+     *
      * @param manager BeaconManager.
      */
     public BeaconMonitorNotifier(BeaconManager manager) {
-       this.beaconManager = manager;
+        this.beaconManager = manager;
     }
 
     @Override
@@ -41,12 +47,23 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
     @Override
     public void didExitRegion(Region region) {
         Log.i("I no longer see an beacon");
+
         try {
             beaconManager.stopRangingBeaconsInRegion(region);
+            try (Realm realm = Realm.getDefaultInstance()) {
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        final RealmResults<BeaconStatus> items = realm.where(BeaconStatus.class).findAll();
+                        for (BeaconStatus item : items) {
+                            item.setDetection(false);
+                        }
+                    }
+                });
+            }
         } catch (RemoteException e) {
             Log.e(e);
         }
-
     }
 
     @Override
