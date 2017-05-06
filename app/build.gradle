@@ -28,7 +28,7 @@ android {
         applicationId "cx.mb.beaconmonitor"
         minSdkVersion 23
         targetSdkVersion 25
-        versionName "0.5.0"
+        versionName "0.5.1"
         versionCode computeVersionCode()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
