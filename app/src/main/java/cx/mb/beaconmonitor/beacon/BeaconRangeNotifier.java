@@ -13,7 +13,9 @@ import java.util.Locale;
 
 import cx.mb.beaconmonitor.realm.BeaconHistory;
 import cx.mb.beaconmonitor.realm.BeaconItem;
+import cx.mb.beaconmonitor.realm.BeaconStatus;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import trikita.log.Log;
 
 /**
@@ -33,6 +35,11 @@ public class BeaconRangeNotifier implements RangeNotifier {
                 @Override
                 public void execute(Realm realm) {
 
+                    final RealmResults<BeaconStatus> items = realm.where(BeaconStatus.class).findAll();
+                    for (BeaconStatus item : items) {
+                        item.setDetection(false);
+                    }
+
                     for (Beacon col : collection) {
                         final String uuid = col.getId1().toString().toUpperCase();
                         final int major = col.getId2().toInt();
@@ -42,7 +49,8 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         final int txPower = col.getTxPower();
                         final String id = String.format(Locale.US, "%s_%d_%d", uuid, major, minor);
 
-                        BeaconItem beacon = localRealm.where(BeaconItem.class).equalTo("id", id).findFirst();
+                        BeaconItem beacon = realm.where(BeaconItem.class).equalTo("id", id).findFirst();
+                        BeaconStatus status;
 
                         if (beacon != null) {
                             Log.i("Beacon " + id + "is exists.");
@@ -52,6 +60,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
                             beacon.setUuid(uuid);
                             beacon.setMajor(major);
                             beacon.setMinor(minor);
+                            beacon.setStatus(realm.createObject(BeaconStatus.class));
 
                             realm.insert(beacon);
                         }
@@ -62,6 +71,9 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         history.setDistance(distance);
                         history.setTxPower(txPower);
                         history.setOwner(beacon);
+
+                        status = beacon.getStatus();
+                        status.setDetection(true);
 
                         beacon.getHistories().add(history);
                     }
