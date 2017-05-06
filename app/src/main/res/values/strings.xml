@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">MNavi</string>
+
+    <string name="dummy">ダミーテキスト</string>
+
+    <string name="app_name">iBeaconモニタ</string>
+
+    <string name="beacon_format">m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24</string>
+    <integer name="beacon_foreground_between_scan_period">1000</integer>
+    <string name="title_activity_scan">ScanActivity</string>
+    <string name="error_permissions">権限が不足しています。</string>
+
+    <string name="button_filter">filter</string>
+    <string name="button_clear">clear</string>
+    <string name="error_uuid_is_empty">UUID is empty.</string>
+    <string name="major_minor_format">MAJOR:%1$d / MINOR:%2$d</string>
+    <string name="beacon_list_text_uuid_hint">Enter filter text.</string>
+    <string name="beacon_list_no_data">データがありません</string>
+    <string name="beacon_graph_beacon_info">UUID: %1$s / MAJOR: %2$d / MINOR: %3$d</string>
+    <integer name="beacon_list_refresh_interval" type="id">1000</integer>
+    <integer name="beacon_list_time_span_minutes">2</integer>
 </resources>
