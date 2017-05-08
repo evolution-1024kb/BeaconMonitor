@@ -10,15 +10,16 @@
               tools:context="cx.mb.beaconmonitor.fragment.BeaconListFragment">
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:orientation="horizontal">
+                  android:orientation="horizontal"
+                  android:visibility="gone">
         <EditText
             android:id="@+id/beacon_list_text_uuid"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:inputType="text"
             android:hint="@string/beacon_list_text_uuid_hint"
+            android:inputType="text"
             android:text="@string/dummy"/>
 
         <Button
