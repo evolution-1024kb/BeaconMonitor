@@ -1,0 +1,3 @@
+# BeaconMonitor
+
+Androidで周囲のiBeaconの電波状態をモニタリングするためのアプリを作ってみる
