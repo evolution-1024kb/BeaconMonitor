@@ -45,14 +45,15 @@ dependencies {
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.uphyca:stetho_realm:2.0.0'
-    provided 'org.projectlombok:lombok:1.16.16'
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.uphyca:stetho_realm:2.1.0'
+    provided 'org.projectlombok:lombok:1.16.18'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'co.trikita:log:1.1.5'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
@@ -60,7 +61,7 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
     compile 'io.realm:android-adapters:2.0.0'
-    compile 'org.altbeacon:android-beacon-library:2.10'
+    compile 'org.altbeacon:android-beacon-library:2.12.3'
     compile 'com.google.android:flexbox:0.2.5'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'org.apache.commons:commons-lang3:3.5'
