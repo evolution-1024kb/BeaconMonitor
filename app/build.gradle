@@ -22,12 +22,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "cx.mb.beaconmonitor"
         minSdkVersion 23
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionName "0.5.3"
         versionCode computeVersionCode()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -47,8 +47,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:design:26.+'
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.uphyca:stetho_realm:2.1.0'
     provided 'org.projectlombok:lombok:1.16.18'
