@@ -16,7 +16,7 @@ import cx.mb.beaconmonitor.realm.BeaconItem;
 import cx.mb.beaconmonitor.realm.BeaconStatus;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import trikita.log.Log;
+import timber.log.Timber;
 
 /**
  * A Notifier of beacon detection.
@@ -53,9 +53,9 @@ public class BeaconRangeNotifier implements RangeNotifier {
                         BeaconStatus status;
 
                         if (beacon != null) {
-                            Log.i("Beacon " + id + "is exists.");
+                            Timber.i("Beacon %s is exists.", id);
                         } else {
-                            Log.i("Beacon " + id + "is not exists.");
+                            Timber.i("Beacon %s is not exists.", id);
                             beacon = realm.createObject(BeaconItem.class, id);
                             beacon.setUuid(uuid);
                             beacon.setMajor(major);
@@ -82,7 +82,7 @@ public class BeaconRangeNotifier implements RangeNotifier {
         }
 
         for (final org.altbeacon.beacon.Beacon beacon : collection) {
-            Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getRssi() + ":" + beacon.getDistance());
+            Timber.i("%s:%s:%s:%d:%s", beacon.getId1(), beacon.getId2(), beacon.getId3(), beacon.getRssi(), beacon.getDistance());
         }
     }
 }

@@ -54,11 +54,12 @@ dependencies {
     provided 'org.projectlombok:lombok:1.16.18'
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'co.trikita:log:1.1.5'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    compile 'com.jakewharton.timber:timber:4.1.2'
 
     compile 'io.realm:android-adapters:2.0.0'
     compile 'org.altbeacon:android-beacon-library:2.12.3'

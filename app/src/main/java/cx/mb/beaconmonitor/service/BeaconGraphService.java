@@ -25,7 +25,6 @@ import cx.mb.beaconmonitor.realm.BeaconHistory;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import trikita.log.Log;
 
 /**
  * Service class for BeaconGraphFragment.

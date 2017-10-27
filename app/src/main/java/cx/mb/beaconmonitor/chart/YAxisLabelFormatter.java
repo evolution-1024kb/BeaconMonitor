@@ -1,14 +1,10 @@
 package cx.mb.beaconmonitor.chart;
 
 import android.text.format.DateFormat;
-
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
-import java.util.Calendar;
 import java.util.Date;
-
-import trikita.log.Log;
 
 /**
  * Graph Y Axis label formatter.

@@ -1,17 +1,13 @@
 package cx.mb.beaconmonitor.beacon;
 
 import android.os.RemoteException;
-
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.Identifier;
-import org.altbeacon.beacon.MonitorNotifier;
-import org.altbeacon.beacon.Region;
-
 import cx.mb.beaconmonitor.realm.BeaconStatus;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import trikita.log.Log;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.Region;
+import timber.log.Timber;
 
 /**
  * A Monitor of beacon detection.
@@ -35,18 +31,18 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
 
     @Override
     public void didEnterRegion(Region region) {
-        Log.i("I just saw an beacon for the first time!");
+        Timber.i("I just saw an beacon for the first time!");
 
         try {
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
-            Log.e(e);
+            Timber.e(e.toString());
         }
     }
 
     @Override
     public void didExitRegion(Region region) {
-        Log.i("I no longer see an beacon");
+        Timber.i("I no longer see an beacon");
 
         try {
             beaconManager.stopRangingBeaconsInRegion(region);
@@ -62,13 +58,13 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
                 });
             }
         } catch (RemoteException e) {
-            Log.e(e);
+            Timber.e(e.toString());
         }
     }
 
     @Override
     public void didDetermineStateForRegion(int state, Region region) {
-        Log.i("I have just switched from seeing/not seeing beacons: " + state);
+        Timber.i("I have just switched from seeing/not seeing beacons: %d", state);
 
     }
 }

@@ -18,7 +18,7 @@ import cx.mb.beaconmonitor.beacon.BeaconManagerBuilder;
 import cx.mb.beaconmonitor.beacon.BeaconMonitorNotifier;
 import cx.mb.beaconmonitor.beacon.BeaconRangeNotifier;
 import cx.mb.beaconmonitor.service.MainService;
-import trikita.log.Log;
+import timber.log.Timber;
 
 /**
  * A Main activity.
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 }
             }
 
-            Log.i("isGrantedAll ? :" + String.valueOf(grantedAll));
+            Timber.i("isGrantedAll ? : %s", String.valueOf(grantedAll));
 
             if (grantedAll) {
                 bindBeaconManager();
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             beaconManager.removeAllMonitorNotifiers();
             beaconManager.removeAllRangeNotifiers();
         } catch (RemoteException e) {
-            Log.e(e);
+            Timber.e(e.toString());
         }
         beaconManager.unbind(this);
         beaconManager = null;
@@ -109,12 +109,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         try {
             beaconManager.startMonitoringBeaconsInRegion(region);
         } catch (RemoteException e) {
-            Log.i(e);
+            Timber.e(e.toString());
             throw new RuntimeException(e);
         }
     }
 
-   /**
+    /**
      * Connect to beacon manager.
      */
     private void bindBeaconManager() {
