@@ -46,10 +46,7 @@ public class MainService {
     public boolean isBluetoothEnabled() {
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if (adapter == null) {
-            return false;
-        }
-        return adapter.isEnabled();
+        return adapter != null && adapter.isEnabled();
     }
 
     /**

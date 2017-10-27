@@ -81,6 +81,9 @@ public class BeaconGraphFragment extends Fragment {
      */
     private int minor;
 
+    /***
+     * Default constructor.
+     */
     public BeaconGraphFragment() {
         // Required empty public constructor
     }

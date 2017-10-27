@@ -47,13 +47,10 @@ public class BeaconMonitorNotifier implements MonitorNotifier {
         try {
             beaconManager.stopRangingBeaconsInRegion(region);
             try (Realm realm = Realm.getDefaultInstance()) {
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        final RealmResults<BeaconStatus> items = realm.where(BeaconStatus.class).findAll();
-                        for (BeaconStatus item : items) {
-                            item.setDetection(false);
-                        }
+                realm.executeTransaction(_realm -> {
+                    final RealmResults<BeaconStatus> items = _realm.where(BeaconStatus.class).findAll();
+                    for (BeaconStatus item : items) {
+                        item.setDetection(false);
                     }
                 });
             }
