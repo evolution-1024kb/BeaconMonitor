@@ -34,7 +34,6 @@ public class YAxisLabelFormatter implements IAxisValueFormatter {
     public String getFormattedValue(float value, AxisBase axis) {
 
         final String time = DateFormat.format("kk:mm:ss", origin[(int) value]).toString();
-//        Log.d("Time:%s", time);
         return time;
     }
 }

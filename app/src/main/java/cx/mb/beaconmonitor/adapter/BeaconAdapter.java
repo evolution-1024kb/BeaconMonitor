@@ -45,8 +45,8 @@ public class BeaconAdapter extends RealmBaseAdapter<BeaconItem> implements ListA
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.near_items_item, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.uuid = (TextView) view.findViewById(R.id.item_uuid);
-            viewHolder.major = (TextView) view.findViewById(R.id.item_major);
+            viewHolder.uuid = view.findViewById(R.id.item_uuid);
+            viewHolder.major = view.findViewById(R.id.item_major);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
