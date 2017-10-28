@@ -2,30 +2,19 @@ package cx.mb.beaconmonitor.service;
 
 import android.content.Context;
 import android.graphics.Color;
-
-import com.github.mikephil.charting.animation.ChartAnimator;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ViewPortHandler;
-
-import org.altbeacon.beacon.Beacon;
+import cx.mb.beaconmonitor.R;
+import cx.mb.beaconmonitor.realm.BeaconHistory;
+import io.realm.Realm;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import cx.mb.beaconmonitor.R;
-import cx.mb.beaconmonitor.chart.YAxisLabelFormatter;
-import cx.mb.beaconmonitor.realm.BeaconHistory;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
-import trikita.log.Log;
 
 /**
  * Service class for BeaconGraphFragment.

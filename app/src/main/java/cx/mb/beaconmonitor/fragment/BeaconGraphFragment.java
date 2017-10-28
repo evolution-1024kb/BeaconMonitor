@@ -31,7 +31,7 @@ import cx.mb.beaconmonitor.event.BeaconSelectEvent;
 import cx.mb.beaconmonitor.service.BeaconGraphService;
 import cx.mb.beaconmonitor.service.LineDataContainer;
 import io.realm.Realm;
-import trikita.log.Log;
+import timber.log.Timber;
 
 /**
  * Graph fragment.
@@ -81,6 +81,9 @@ public class BeaconGraphFragment extends Fragment {
      */
     private int minor;
 
+    /***
+     * Default constructor.
+     */
     public BeaconGraphFragment() {
         // Required empty public constructor
     }
@@ -131,7 +134,7 @@ public class BeaconGraphFragment extends Fragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleBeaconSelect(BeaconSelectEvent event) {
-        Log.d("UUID:%s, MAJOR:%d, MINOR:%d", event.getUuid(), event.getMajor(), event.getMinor());
+        Timber.d("UUID:%s, MAJOR:%d, MINOR:%d", event.getUuid(), event.getMajor(), event.getMinor());
 
         uuid = event.getUuid();
         major = event.getMajor();
@@ -183,7 +186,7 @@ public class BeaconGraphFragment extends Fragment {
         final Date now = DateUtils.truncate(new Date(), Calendar.MILLISECOND);
         final Date threshold = service.getThreshold(now);
 
-        Log.d("NOW:", now, "THRESHOLD:", threshold);
+        Timber.d("NOW:%s, THRESHOLD: %s", now, threshold);
 
         final LineDataContainer container = service.createLineData(now, threshold, uuid, major, minor);
 

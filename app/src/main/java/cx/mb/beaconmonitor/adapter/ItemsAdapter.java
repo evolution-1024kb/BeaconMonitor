@@ -47,7 +47,7 @@ public class ItemsAdapter extends RealmBaseAdapter<BeaconItem> implements ListAd
             convertView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.near_items_item, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.uuid = (TextView) convertView.findViewById(R.id.item_uuid);
+            viewHolder.uuid = convertView.findViewById(R.id.item_uuid);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

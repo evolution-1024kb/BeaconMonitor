@@ -9,7 +9,6 @@ import cx.mb.beaconmonitor.R;
 
 /**
  * A Utility class of Beacon Manager.
- * ビーコンマネージャの作成ユーティリティ
  * Created by toshiaki on 2017/01/29.
  */
 public class BeaconManagerBuilder {

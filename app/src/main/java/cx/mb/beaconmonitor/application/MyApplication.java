@@ -8,7 +8,7 @@ import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import cx.mb.beaconmonitor.BuildConfig;
 import io.realm.Realm;
-import trikita.log.Log;
+import timber.log.Timber;
 
 /**
  * Custom application class.
@@ -21,7 +21,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Log.useFormat(true);
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this);
         }
@@ -29,6 +28,7 @@ public class MyApplication extends Application {
         Realm.init(this);
 
         if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
             Stetho.initialize(
                     Stetho.newInitializerBuilder(this)
                             .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))

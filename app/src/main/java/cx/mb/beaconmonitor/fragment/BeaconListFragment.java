@@ -24,7 +24,7 @@ import cx.mb.beaconmonitor.realm.BeaconItem;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import trikita.log.Log;
+import timber.log.Timber;
 
 /**
  * A fragment of beacon list.
@@ -106,7 +106,7 @@ public class BeaconListFragment extends Fragment {
     public void onBeaconListItemClick(int position) {
 
         final BeaconItem item = (BeaconItem) listBeacons.getAdapter().getItem(position);
-        Log.d("UUID:%s, MAJOR:%d, MINOR:%d", item.getUuid(), item.getMajor(), item.getMinor());
+        Timber.d("UUID:%s, MAJOR:%d, MINOR:%d", item.getUuid(), item.getMajor(), item.getMinor());
 
         if (EventBus.getDefault().hasSubscriberForEvent(BeaconSelectEvent.class)){
             final BeaconSelectEvent event = new BeaconSelectEvent();

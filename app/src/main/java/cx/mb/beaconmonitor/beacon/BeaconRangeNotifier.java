@@ -16,7 +16,7 @@ import cx.mb.beaconmonitor.realm.BeaconItem;
 import cx.mb.beaconmonitor.realm.BeaconStatus;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import trikita.log.Log;
+import timber.log.Timber;
 
 /**
  * A Notifier of beacon detection.
@@ -31,58 +31,55 @@ public class BeaconRangeNotifier implements RangeNotifier {
         }
 
         try (final Realm localRealm = Realm.getDefaultInstance()) {
-            localRealm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
+            localRealm.executeTransaction(realm -> {
 
-                    final RealmResults<BeaconStatus> items = realm.where(BeaconStatus.class).findAll();
-                    for (BeaconStatus item : items) {
-                        item.setDetection(false);
+                final RealmResults<BeaconStatus> items = realm.where(BeaconStatus.class).findAll();
+                for (BeaconStatus item : items) {
+                    item.setDetection(false);
+                }
+
+                for (Beacon col : collection) {
+                    final String uuid = col.getId1().toString().toUpperCase(Locale.ENGLISH);
+                    final int major = col.getId2().toInt();
+                    final int minor = col.getId3().toInt();
+                    final int rssi = col.getRssi();
+                    final double distance = col.getDistance();
+                    final int txPower = col.getTxPower();
+                    final String id = String.format(Locale.US, "%s_%d_%d", uuid, major, minor);
+
+                    BeaconItem beacon = realm.where(BeaconItem.class).equalTo("id", id).findFirst();
+                    BeaconStatus status;
+
+                    if (beacon != null) {
+                        Timber.i("Beacon %s is exists.", id);
+                    } else {
+                        Timber.i("Beacon %s is not exists.", id);
+                        beacon = realm.createObject(BeaconItem.class, id);
+                        beacon.setUuid(uuid);
+                        beacon.setMajor(major);
+                        beacon.setMinor(minor);
+                        beacon.setStatus(realm.createObject(BeaconStatus.class));
+
+                        realm.insert(beacon);
                     }
 
-                    for (Beacon col : collection) {
-                        final String uuid = col.getId1().toString().toUpperCase(Locale.ENGLISH);
-                        final int major = col.getId2().toInt();
-                        final int minor = col.getId3().toInt();
-                        final int rssi = col.getRssi();
-                        final double distance = col.getDistance();
-                        final int txPower = col.getTxPower();
-                        final String id = String.format(Locale.US, "%s_%d_%d", uuid, major, minor);
+                    final BeaconHistory history = realm.createObject(BeaconHistory.class);
+                    history.setDetectAt(DateUtils.truncate(new Date(), Calendar.SECOND));
+                    history.setRssi(rssi);
+                    history.setDistance(distance);
+                    history.setTxPower(txPower);
+                    history.setOwner(beacon);
 
-                        BeaconItem beacon = realm.where(BeaconItem.class).equalTo("id", id).findFirst();
-                        BeaconStatus status;
+                    status = beacon.getStatus();
+                    status.setDetection(true);
 
-                        if (beacon != null) {
-                            Log.i("Beacon " + id + "is exists.");
-                        } else {
-                            Log.i("Beacon " + id + "is not exists.");
-                            beacon = realm.createObject(BeaconItem.class, id);
-                            beacon.setUuid(uuid);
-                            beacon.setMajor(major);
-                            beacon.setMinor(minor);
-                            beacon.setStatus(realm.createObject(BeaconStatus.class));
-
-                            realm.insert(beacon);
-                        }
-
-                        final BeaconHistory history = realm.createObject(BeaconHistory.class);
-                        history.setDetectAt(DateUtils.truncate(new Date(), Calendar.SECOND));
-                        history.setRssi(rssi);
-                        history.setDistance(distance);
-                        history.setTxPower(txPower);
-                        history.setOwner(beacon);
-
-                        status = beacon.getStatus();
-                        status.setDetection(true);
-
-                        beacon.getHistories().add(history);
-                    }
+                    beacon.getHistories().add(history);
                 }
             });
         }
 
         for (final org.altbeacon.beacon.Beacon beacon : collection) {
-            Log.i(beacon.getId1() + ":" + beacon.getId2() + ":" + beacon.getId3() + ":" + beacon.getRssi() + ":" + beacon.getDistance());
+            Timber.i("%s:%s:%s:%d:%s", beacon.getId1(), beacon.getId2(), beacon.getId3(), beacon.getRssi(), beacon.getDistance());
         }
     }
 }
